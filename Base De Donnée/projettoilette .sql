@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Client :  localhost
--- Généré le :  Mer 25 Octobre 2017 à 20:39
+-- Généré le :  Mer 25 Octobre 2017 à 21:37
 -- Version du serveur :  5.7.11
 -- Version de PHP :  5.6.18
 
@@ -53,8 +53,6 @@ CREATE TABLE `compte` (
 -- Contenu de la table `compte`
 --
 
-INSERT INTO `compte` (`IdCompte`, `Courriel`, `MotDePasse`, `Age`, `Ville`, `Nom`, `Prenom`) VALUES
-(1, 'f@mail.com', 'f', 13, 'Montreal', 'Pare', 'Francis');
 
 -- --------------------------------------------------------
 
@@ -65,12 +63,17 @@ INSERT INTO `compte` (`IdCompte`, `Courriel`, `MotDePasse`, `Age`, `Ville`, `Nom
 CREATE TABLE `toilette` (
   `IdToilette` int(255) NOT NULL,
   `IdCompte` int(100) NOT NULL,
-  `Longitude` double NOT NULL,
-  `Latitude` double NOT NULL,
+  `Longitude` decimal(9,6) NOT NULL,
+  `Latitude` decimal(9,6) NOT NULL,
   `Description` varchar(1000) NOT NULL,
   `Etat` int(11) NOT NULL,
   `TypeDeService` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Contenu de la table `toilette`
+--
+
 
 --
 -- Index pour les tables exportées
@@ -110,7 +113,7 @@ ALTER TABLE `commentaire`
 -- AUTO_INCREMENT pour la table `compte`
 --
 ALTER TABLE `compte`
-  MODIFY `IdCompte` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `IdCompte` int(100) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT pour la table `toilette`
 --
