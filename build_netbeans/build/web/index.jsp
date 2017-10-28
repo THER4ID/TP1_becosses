@@ -98,7 +98,6 @@
             <li class="active"><a href="#">Accueil</a></li>
             <li><a href="#">Favoris</a></li>
             <li><a href="#">Sauvegarder</a></li>
-            <li><a href="#">Page 3</a></li>
             <li>
                 <a>
                     
@@ -122,37 +121,55 @@
         <div id="map"></div>
 
     </div>
-    <script>
-      function initMap() {
+      <script> 
+        function initMap() {
         
-        //Carte
-        var map = new google.maps.Map(document.getElementById('map'), {
-          zoom: 11,
-          center: {lat: 45.5017, lng: -73.5673},
-          mapTypeControl: true,
-          mapTypeControlOptions: {
-            style: google.maps.MapTypeControlStyle.DROPDOWN_MENU,
-            mapTypeIds: ['roadmap', 'terrain']
-          }
-        });
-        
+            //Carte
+            var map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 11,
+                center: {lat: 45.5017, lng: -73.5673},
+                mapTypeControl: true,
+                mapTypeControlOptions: {
+                    style: google.maps.MapTypeControlStyle.DROPDOWN_MENU,
+                    mapTypeIds: ['roadmap', 'terrain']
+                }
+            });
 
-        //marqueurs
-        var marker = new google.maps.Marker({
-          position: {lat: 45.5017, lng: -73.5673},
-          map: map
-        });
+            map.addListener('dblclick', function(e) {
+                placeMarker(e.latLng,map);
+            });
+            
+            function placeMarker(location,map){
+                var marker = new google.maps.Marker({
+                    position: location,
+                    map: map
+                    
+                });
+            
+            
+                //fenetre de details
+                var infoWindow = new google.maps.InfoWindow({
+                   content: "voici la description des toilettes </br><button type='button'>ajouter aux favoris</button> <button type='button'>Sauvegarder</button>" 
+                });
+
+                marker.addListener('mouseover',function(){
+                    infoWindow.open(map,marker);
+                });
+                marker.addListener('mouseout',function(){
+                   infoWindow.close(map,marker);
+                });
+            }
+            
+
+        }
         
-        //fenetre de details
-        var infoWindow = new google.maps.InfoWindow({
-           content: "voici la description des toilettes </br><button type='button'>ajouter aux favoris</button>" 
-        });
         
-        marker.addListener('click',function(){
-            infoWindow.open(map,marker);
-        });
-      }
+    
+        //ajout d'un marqueur avec un click
+        
     </script>
+    
+    
     <script async defer
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD3gKwa-w0U3DzR9pp02SOhPQaYN4KWCqY&callback=initMap">
     </script>
