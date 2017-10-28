@@ -82,9 +82,9 @@
               .connection{
                   left:350px;
               }
-          
-
-            
+              #map{
+                height: 80%;   
+              } 
         </style>
     </head>
   <body>
@@ -92,7 +92,7 @@
     <nav class="navbar navbar-default">
         <div class="container-fluid">
           <div class="navbar-header">
-            <a class="navbar-brand" href="#">toilettes</a>
+            <a class="navbar-brand" href="#">Toilettes</a>
           </div>
           <ul class="nav navbar-nav">
             <li class="active"><a href="#">Accueil</a></li>
@@ -124,14 +124,32 @@
     </div>
     <script>
       function initMap() {
-        var uluru = {lat: -25.363, lng: 131.044};
+        
+        //Carte
         var map = new google.maps.Map(document.getElementById('map'), {
-          zoom: 4,
-          center: uluru
+          zoom: 11,
+          center: {lat: 45.5017, lng: -73.5673},
+          mapTypeControl: true,
+          mapTypeControlOptions: {
+            style: google.maps.MapTypeControlStyle.DROPDOWN_MENU,
+            mapTypeIds: ['roadmap', 'terrain']
+          }
         });
+        
+
+        //marqueurs
         var marker = new google.maps.Marker({
-          position: uluru,
+          position: {lat: 45.5017, lng: -73.5673},
           map: map
+        });
+        
+        //fenetre de details
+        var infoWindow = new google.maps.InfoWindow({
+           content: "voici la description des toilettes </br><button type='button'>ajouter aux favoris</button>" 
+        });
+        
+        marker.addListener('click',function(){
+            infoWindow.open(map,marker);
         });
       }
     </script>
