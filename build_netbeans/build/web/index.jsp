@@ -201,7 +201,7 @@
                 marker.addListener('mouseover',function(){
                     infoWindow.open(map,marker);
                 });
-                marker.addListener('mouseout',function(){
+                marker.addListener('click',function(){
                    infoWindow.close(map,marker);
                 });
             }
