@@ -192,8 +192,10 @@
             
                 //fenetre de details
                 var infoWindow = new google.maps.InfoWindow({
-                   var Contentstring = "";
-                   content: " </br><button type='button'>Sauvegarder</button><button type='button' onclick = 'Modif_txt()'>modifier</button>" 
+                   
+                   
+                   content: " </br><button type='button'>Sauvegarder</button><button type='button'>modifier</button>" 
+                   
                 });
 
                 marker.addListener('mouseover',function(){
@@ -202,12 +204,6 @@
                 marker.addListener('mouseout',function(){
                    infoWindow.close(map,marker);
                 });
-            }
-            
-            function Modif_txt(){
-                
-                
-                
             }
         }
         
