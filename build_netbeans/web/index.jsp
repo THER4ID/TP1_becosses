@@ -121,21 +121,20 @@
         <div id="map"></div>
 
     </div>
-<<<<<<< HEAD
     <script>
-      function initMap() {
+      /*function initMap() {
             var uluru = {lat: -25.363, lng: 131.044};
             var map = new google.maps.Map(document.getElementById('map'), {
               zoom: 4,
               center: uluru
             });
             
-        }
+        }*/
         </script>
         
         <script>
          // Erreur non régler : Prbleme avec la function JQuery
-         $( document ).ready(function() {
+        $( document ).ready(function() {
           $.getJSON('ListeToilette.action?Action=ListeToiletteAjax',function(data,status){
                 for(i=0;i >1;i++){
                     var positionToilette = {lat:data[i].Latitude, lng:data[i].Longitude };
@@ -147,7 +146,7 @@
             });
         });
             
-=======
+       </script>
       <script> 
         function initMap() {
         
@@ -194,7 +193,6 @@
     
         //ajout d'un marqueur avec un click
         
->>>>>>> master
     </script>
     
     
