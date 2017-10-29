@@ -12,9 +12,11 @@
         <meta charset="utf-8">
         <link href="style.css" rel="stylesheet" type="text/css" />
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        
         
         <style>
             @import url(https://fonts.googleapis.com/css?family=Roboto:300);
@@ -37,54 +39,57 @@
               font-family: "Roboto", sans-serif;
               -webkit-font-smoothing: antialiased;
               -moz-osx-font-smoothing: grayscale;  
-              }
-
-              .search {
-                width: 150%;
-                position: relative;
-                bottom:50%;
-                height: 20px;
-                left: 70%;
-                transform: translate(-50%, -50%);
-
-
-
-              }
-
-              .searchTerm {
-                float: left;
-                width: 100%;
-                border: 3px solid #00B4CC;
-                padding: 5px;
-
-                border-radius: 5px;
+            }
+            .connection{
+                left:650px;
+            }
+            #map{
+              height: 70%;   
+            } 
+            .controls {
+                margin-top: 10px;
+                border: 1px solid transparent;
+                border-radius: 2px 0 0 2px;
+                box-sizing: border-box;
+                -moz-box-sizing: border-box;
+                height: 32px;
                 outline: none;
-                color: #9DBFAF;
-              }
+                box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+            }
 
-              .searchTerm:focus{
-                color: #00B4CC;
-              }
+            #pac-input {
+              background-color: #fff;
+              font-family: Roboto;
+              font-size: 15px;
+              font-weight: 300;
+              margin-left: 12px;
+              padding: 0 11px 0 13px;
+              text-overflow: ellipsis;
+              width: 300px;
+            }
 
-              .searchButton {
-                position: absolute;  
-                right: -50px;
-                width: 40px;
-                height: 36px;
-                border: 1px solid #00B4CC;
-                background: #00B4CC;
-                text-align: center;
-                color: #fff;
-                border-radius: 5px;
-                cursor: pointer;
-                font-size: 20px;
-              }
-              .connection{
-                  left:350px;
-              }
-              #map{
-                height: 80%;   
-              } 
+            #pac-input:focus {
+              border-color: #4d90fe;
+            }
+
+            .pac-container {
+              font-family: Roboto;
+            }
+
+            #type-selector {
+              color: #fff;
+              background-color: #4d90fe;
+              padding: 5px 11px 0px 11px;
+            }
+
+            #type-selector label {
+              font-family: Roboto;
+              font-size: 13px;
+              font-weight: 300;
+            }
+            #target {
+              width: 345px;
+            }           
         </style>
     </head>
   <body>
@@ -98,19 +103,8 @@
             <li class="active"><a href="#">Accueil</a></li>
             <li><a href="#">Favoris</a></li>
             <li><a href="#">Sauvegarder</a></li>
-            <li>
-                <a>
-                    
-                    <div class="search">
-                        <input type="text" class="searchTerm" placeholder="quel endroit cherchez-vous?">
-
-                        <button type="submit" class="searchButton">
-                            <i class="fa fa-search"></i>
-                        </button>
-                    </div>                    
-                </a>                
-            </li> 
-            <li><a href="PageConnexion.jsp" class="connection">se connecter</a>
+            <input id="pac-input" class="controls" type="text" placeholder="Search Box">
+            <li><a href="PageConnexion.jsp" class="connection">Se Connecter</a>
             </li>
           
             
@@ -128,28 +122,78 @@
             var map = new google.maps.Map(document.getElementById('map'), {
                 zoom: 11,
                 center: {lat: 45.5017, lng: -73.5673},
+                
                 mapTypeControl: true,
+                
                 mapTypeControlOptions: {
                     style: google.maps.MapTypeControlStyle.DROPDOWN_MENU,
                     mapTypeIds: ['roadmap', 'terrain']
                 }
             });
-
+            
+           
+            //ajout de marqueurs
+            
+            
             map.addListener('dblclick', function(e) {
                 placeMarker(e.latLng,map);
             });
             
+           
+            //scripts pour la barre de recherche
+            
+            var input = document.getElementById('pac-input');
+            var searchBox = new google.maps.places.SearchBox(input);
+            map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+            
+            
+            map.addListener('bounds_changed', function() {
+                searchBox.setBounds(map.getBounds());
+            });
+          
+            
+            searchBox.addListener('places_changed', function() {
+                var places = searchBox.getPlaces();
+
+                if (places.length === 0) {
+                    return;
+                }
+                
+
+                var bounds = new google.maps.LatLngBounds();
+            
+                places.forEach(function(place) {
+                    if (!place.geometry) {
+                      console.log("Returned place contains no geometry");
+                      return;
+                    }
+                   
+                    if (place.geometry.viewport) {
+                      // Only geocodes have viewport.
+                      bounds.union(place.geometry.viewport);
+                    } else {
+                      bounds.extend(place.geometry.location);
+                    }
+
+                });
+                //ajuste la vue de la carte autour de la recherche
+                map.fitBounds(bounds);
+            });
+            
+            
+            //fonction de placemements de marqueurs
             function placeMarker(location,map){
                 var marker = new google.maps.Marker({
                     position: location,
-                    map: map
-                    
+                    map: map,
+                    animation: google.maps.Animation.DROP
                 });
             
             
                 //fenetre de details
                 var infoWindow = new google.maps.InfoWindow({
-                   content: "voici la description des toilettes </br><button type='button'>ajouter aux favoris</button> <button type='button'>Sauvegarder</button>" 
+                   var Contentstring = "";
+                   content: " </br><button type='button'>Sauvegarder</button><button type='button' onclick = 'Modif_txt()'>modifier</button>" 
                 });
 
                 marker.addListener('mouseover',function(){
@@ -160,7 +204,11 @@
                 });
             }
             
-
+            function Modif_txt(){
+                
+                
+                
+            }
         }
         
         
@@ -171,7 +219,7 @@
     
     
     <script async defer
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD3gKwa-w0U3DzR9pp02SOhPQaYN4KWCqY&callback=initMap">
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD3gKwa-w0U3DzR9pp02SOhPQaYN4KWCqY&libraries=places&callback=initMap">
     </script>
   </body>
 </html>
