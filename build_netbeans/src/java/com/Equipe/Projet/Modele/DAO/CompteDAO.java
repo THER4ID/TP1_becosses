@@ -56,9 +56,9 @@ public class CompteDAO extends DAO<Compte> {
 		return false;
     }
 
-    @Override
     
-    public Compte read(String courriel) {
+    
+    public Compte FindByCourriel(String courriel) {
         Statement stm = null;
         ResultSet r = null;
         
@@ -102,22 +102,6 @@ public class CompteDAO extends DAO<Compte> {
         }
         return null;
     }
-    /*
-    @Override
-    public Compte read(String id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public boolean update(Compte x) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-    
-    @Override
-    public boolean delete(Compte x) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-    */
     
     @Override
     public List<Compte> findAll() {
@@ -147,6 +131,26 @@ public class CompteDAO extends DAO<Compte> {
         
         }
         return liste;
+    }
+
+    @Override
+    public Compte read(int id) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Compte read(String id) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean update(Compte x) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean delete(Compte x) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
 }

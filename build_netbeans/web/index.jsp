@@ -205,6 +205,13 @@
                    infoWindow.close(map,marker);
                 });
             }
+            $.getJSON('ListeToilette.action?Action=ListeToiletteAjax',function(data,status){
+                alert("Bonjours");
+                for(i=0;i >1;i++){
+                    var positionToilette = {lat:data[i].Latitude, lng:data[i].Longitude };
+                    placeMarker(positionToilette,map);
+                }
+            });
         }
         
         
