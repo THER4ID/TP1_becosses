@@ -197,7 +197,7 @@
                    content: " </br><button type='button'>Sauvegarder</button><button type='button'>modifier</button>" 
                    
                 });
-
+                //ajout de listener
                 marker.addListener('mouseover',function(){
                     infoWindow.open(map,marker);
                 });
