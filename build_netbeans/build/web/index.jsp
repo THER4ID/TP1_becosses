@@ -208,7 +208,6 @@
             //Elle recoit une chaine Json et place un marqueur dans sur la map
             $.getJSON('ListeToilette.action?Action=ListeToiletteAjax',function(data,status){
                 var nombreDeLieu = Object.keys(data).length;
-                alert(nombreDeLieu);
                 for(i=0;i<nombreDeLieu;i++){
                     var positionToilette = {lng:data[i].Longitude,lat:data[i].Latitude };
                     placeMarker(positionToilette,map,data[i].Id);
