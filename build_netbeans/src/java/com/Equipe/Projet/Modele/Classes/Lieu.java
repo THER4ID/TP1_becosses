@@ -21,6 +21,10 @@ public abstract class Lieu {
         this.CompteId = CompteId;
     }
 
+    public Lieu() {
+    }
+    
+
     public void setId(int Id) {
         this.Id = Id;
     }

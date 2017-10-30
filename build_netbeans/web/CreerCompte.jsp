@@ -124,14 +124,11 @@
             <div class="form">     
               </form>
               <form class="login-form">
-                <input type="text" placeholder="adresse courriel"/>
-                <input type="password" placeholder="mot de passe"/>
-                <input type="text" placeholder="Nom"/>
                 <input type="text" placeholder="Prénom"/>
-                <input type="number" placeholder="Age" />
-                <input type="text" placeholder="Ville"/>
-                
-                
+                <input type="text" placeholder="Nom"/>
+                <input type="text" placeholder="Nom d'utilisateur"/>
+                <input type="password" placeholder="mot de passe"/>
+                <input type="text" placeholder="adresse courriel"/>
                 <button>créer le compte</button>
                 <p class="message">déjà un compte? <a href="PageConnexion.Jsp">Se connecter</a></p>
               </form>

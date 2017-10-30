@@ -33,7 +33,6 @@ public class ControleurFrontal extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        int i = 89;
                 String requestAction = request.getParameter("Action");
                 Action action = ActionBuilder.getAction(requestAction);
                 if (action instanceof RequestAware) {
@@ -42,12 +41,17 @@ public class ControleurFrontal extends HttpServlet {
                 }
                 if (action instanceof SessionAware) {
                    ((SessionAware)action).setSession(request.getSession(true));
-                }        
-                String vue = action.execute();
-                this.getServletContext().getRequestDispatcher(vue).forward(request, response);
                 }
-    
+                String vue = action.execute();
+                if(!(action instanceof AjaxAction)){
+                    this.getServletContext().getRequestDispatcher(vue).forward(request, response);
+                    System.out.println("NON");
+                }
+                System.out.println(vue);
 
+    }
+                
+    
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
