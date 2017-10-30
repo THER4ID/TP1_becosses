@@ -121,32 +121,7 @@
         <div id="map"></div>
 
     </div>
-    <script>
-      /*function initMap() {
-            var uluru = {lat: -25.363, lng: 131.044};
-            var map = new google.maps.Map(document.getElementById('map'), {
-              zoom: 4,
-              center: uluru
-            });
-            
-        }*/
-        </script>
         
-        <script>
-         // Erreur non régler : Prbleme avec la function JQuery
-        $( document ).ready(function() {
-          $.getJSON('ListeToilette.action?Action=ListeToiletteAjax',function(data,status){
-                for(i=0;i >1;i++){
-                    var positionToilette = {lat:data[i].Latitude, lng:data[i].Longitude };
-                    var marker = new google.maps.Marker({
-                    position: positionToilette,
-                    map: map
-                    });
-                }
-            });
-        });
-            
-       </script>
       <script> 
         function initMap() {
         
@@ -185,6 +160,19 @@
                    infoWindow.close(map,marker);
                 });
             }
+            // Sous-fonction jQuery Ajax
+            // Affiche tous les lieux de la base de donnée
+            // Erreur : Impossible d'ouvrir le driver mySql:JDBC
+            $.getJSON('ListeToilette.action?Action=ListeToiletteAjax',function(data,status){
+                for(i=0;i >1;i++){
+                    var positionToilette = {lat:data[i].Latitude, lng:data[i].Longitude };
+                    var marker = new google.maps.Marker({
+                    position: positionToilette,
+                    map: map
+                    });
+                }
+            });
+    
             
 
         }

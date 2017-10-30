@@ -33,7 +33,6 @@ public class ControleurFrontal extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        int i = 89;
                 String requestAction = request.getParameter("Action");
                 Action action = ActionBuilder.getAction(requestAction);
                 if (action instanceof RequestAware) {
