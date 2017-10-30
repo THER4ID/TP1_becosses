@@ -15,6 +15,8 @@ public class ActionBuilder {
             switch (actionName) {
                 case "CreerCompte":
                     return new CreerCompteAction();
+                case "ListeToiletteAjax":
+                    return new ListeToiletteAjaxAction();
             }
         return new DefaultAction();
     }

@@ -126,7 +126,7 @@
             <div class="form">
               
               <form class="login-form">
-                <input type="text" placeholder="adresse courriel"/>
+                <input type="text" placeholder="Nom d'utilisateur"/>
                 <input type="password" placeholder="Mot de passe"/>
                 <button>se connecter</button>
                 <p class="message">Nouvel utilisateur? <a href="CreerCompte.jsp">Créer un Compte</a></p>
