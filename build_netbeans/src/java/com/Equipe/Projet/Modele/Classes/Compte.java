@@ -16,6 +16,11 @@ public class Compte {
     public int Age;
     public String Ville;
     //Constructeur
+    
+    public Compte(){
+    
+    }
+    
     public Compte(int IdCompte,String Courriel, String MotDePasse, String Nom, String Prenom, int Age, String Ville) {
         this.IdCompte = IdCompte;
         this.Courriel = Courriel;

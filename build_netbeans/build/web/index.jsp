@@ -122,18 +122,108 @@
         <div id="map"></div>
 
     </div>
-    <script>
-      function initMap() {
-        var uluru = {lat: -25.363, lng: 131.044};
-        var map = new google.maps.Map(document.getElementById('map'), {
-          zoom: 4,
-          center: uluru
-        });
-        var marker = new google.maps.Marker({
-          position: uluru,
-          map: map
-        });
-      }
+      <script> 
+        function initMap() {
+        
+            //Carte
+            var map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 11,
+                center: {lat: 45.5017, lng: -73.5673},
+                
+                mapTypeControl: true,
+                
+                mapTypeControlOptions: {
+                    style: google.maps.MapTypeControlStyle.DROPDOWN_MENU,
+                    mapTypeIds: ['roadmap', 'terrain']
+                }
+            });
+            
+           
+            //ajout de marqueurs
+            
+            
+            map.addListener('dblclick', function(e) {
+                placeMarker(e.latLng,map);
+            });
+            
+           
+            //scripts pour la barre de recherche
+            
+            var input = document.getElementById('pac-input');
+            var searchBox = new google.maps.places.SearchBox(input);
+            map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+            
+            
+            map.addListener('bounds_changed', function() {
+                searchBox.setBounds(map.getBounds());
+            });
+          
+            
+            searchBox.addListener('places_changed', function() {
+                var places = searchBox.getPlaces();
+
+                if (places.length === 0) {
+                    return;
+                }
+                
+
+                var bounds = new google.maps.LatLngBounds();
+            
+                places.forEach(function(place) {
+                    if (!place.geometry) {
+                      console.log("Returned place contains no geometry");
+                      return;
+                    }
+                   
+                    if (place.geometry.viewport) {
+                      // Only geocodes have viewport.
+                      bounds.union(place.geometry.viewport);
+                    } else {
+                      bounds.extend(place.geometry.location);
+                    }
+
+                });
+                //ajuste la vue de la carte autour de la recherche
+                map.fitBounds(bounds);
+            });
+            
+            
+            //fonction de placemements de marqueurs
+            function placeMarker(location,map){
+                var marker = new google.maps.Marker({
+                    position: location,
+                    map: map,
+                    animation: google.maps.Animation.DROP
+                });
+            
+            
+                //fenetre de details
+                var infoWindow = new google.maps.InfoWindow({
+                   
+                   
+                   content: " </br><button type='button'>Sauvegarder</button><button type='button'>modifier</button>" 
+                   
+                });
+                //ajout de listener
+                marker.addListener('mouseover',function(){
+                    infoWindow.open(map,marker);
+                });
+                marker.addListener('click',function(){
+                   infoWindow.close(map,marker);
+                });
+            }
+            $.getJSON('ListeToilette.action?Action=ListeToiletteAjax',function(data,status){
+                alert("Bonjours");
+                for(i=0;i >1;i++){
+                    var positionToilette = {lat:data[i].Latitude, lng:data[i].Longitude };
+                    placeMarker(positionToilette,map);
+                }
+            });
+        }
+        
+        
+    
+        //ajout d'un marqueur avec un click
     </script>
     <script async defer
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD3gKwa-w0U3DzR9pp02SOhPQaYN4KWCqY&callback=initMap">

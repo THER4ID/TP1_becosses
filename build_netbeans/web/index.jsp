@@ -152,7 +152,7 @@
                 var infoWindow = new google.maps.InfoWindow({
                    content: "voici la description des toilettes </br><button type='button'>ajouter aux favoris</button> <button type='button'>Sauvegarder</button>" 
                 });
-
+                //ajout de listener
                 marker.addListener('mouseover',function(){
                     infoWindow.open(map,marker);
                 });
@@ -160,8 +160,9 @@
                    infoWindow.close(map,marker);
                 });
             }
-            // Sous-fonction jQuery Ajax
-            // Affiche tous les lieux de la base de donnée
+
+           // Sous-fonction jQuery Ajax
+            // Affiche tous les lieux de la base de donné
             $.getJSON('ListeToilette.action?Action=ListeToiletteAjax',function(data,status){
                 alert("Bonjours");
                 for(i=0;i >1;i++){
@@ -169,9 +170,6 @@
                     placeMarker(positionToilette,map);
                 }
             });
-    
-            
-
         }
         
         
