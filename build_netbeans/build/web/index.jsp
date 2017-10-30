@@ -134,7 +134,7 @@
             
             
             map.addListener('dblclick', function(e) {
-                placeMarker(e.latLng,map);
+                placeMarker(e.latLng,map);               
             });
             
            
@@ -180,11 +180,11 @@
             
             
             //fonction de placemements de marqueurs
-            function placeMarker(location,map){
+            function placeMarker(location,map,id){
                 var marker = new google.maps.Marker({
                     position: location,
                     map: map,
-                    animation: google.maps.Animation.DROP
+                    animation: google.maps.Animation.DROP                   
                 });
             
             
@@ -192,7 +192,7 @@
                 var infoWindow = new google.maps.InfoWindow({
                    
                    
-                   content: " </br><button type='button'>Sauvegarder</button><button type='button'>modifier</button>" 
+                   content: " </br>"+id+"<button type='button'>Sauvegarder</button><button type='button'>modifier</button>" 
                    
                 });
 
@@ -203,11 +203,15 @@
                    infoWindow.close(map,marker);
                 });
             }
+            //Sous-Fonction AJax/jQuery
+            //Elle va chercher la liste des lieux dans l'action 'ListeToiletteAjax'
+            //Elle recoit une chaine Json et place un marqueur dans sur la map
             $.getJSON('ListeToilette.action?Action=ListeToiletteAjax',function(data,status){
-                alert("Bonjours");
-                for(i=0;i >1;i++){
-                    var positionToilette = {lat:data[i].Latitude, lng:data[i].Longitude };
-                    placeMarker(positionToilette,map);
+                var nombreDeLieu = Object.keys(data).length;
+                alert(nombreDeLieu);
+                for(i=0;i<nombreDeLieu;i++){
+                    var positionToilette = {lng:data[i].Longitude,lat:data[i].Latitude };
+                    placeMarker(positionToilette,map,data[i].Id);
                 }
             });
         }
