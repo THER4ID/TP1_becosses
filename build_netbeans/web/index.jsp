@@ -162,14 +162,11 @@
             }
             // Sous-fonction jQuery Ajax
             // Affiche tous les lieux de la base de donnée
-            // Erreur : Impossible d'ouvrir le driver mySql:JDBC
             $.getJSON('ListeToilette.action?Action=ListeToiletteAjax',function(data,status){
+                alert("Bonjours");
                 for(i=0;i >1;i++){
                     var positionToilette = {lat:data[i].Latitude, lng:data[i].Longitude };
-                    var marker = new google.maps.Marker({
-                    position: positionToilette,
-                    map: map
-                    });
+                    placeMarker(positionToilette,map);
                 }
             });
     

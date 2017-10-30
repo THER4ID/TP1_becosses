@@ -12,6 +12,8 @@ import com.google.gson.Gson;
 import java.sql.Connection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -25,13 +27,21 @@ public class ListeToiletteAjaxAction implements AjaxAction, RequestAware, Action
     
     @Override
     public String execute() {
-       Connection cnx;
-       cnx = Connexion.getInstance();
-       ToiletteDAO daoToilette = new ToiletteDAO(cnx);
-       List<Toilette> liste = new LinkedList<>();
-       liste = daoToilette.findAll();
-       String json = new Gson().toJson(liste);
-       return json;
+        String json = "";
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+            Connection cnx;
+            cnx = Connexion.getInstance();
+            ToiletteDAO daoToilette = new ToiletteDAO(cnx);
+            List<Toilette> liste = new LinkedList<>();
+            liste = daoToilette.findAll();
+            json = new Gson().toJson(liste);
+            System.out.println("Je suis ici");
+            return json;
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ListeToiletteAjaxAction.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return json;
     }
     @Override
     public void setRequest(HttpServletRequest r) {
