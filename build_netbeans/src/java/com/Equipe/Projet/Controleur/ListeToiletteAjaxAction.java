@@ -9,6 +9,7 @@ import com.Equipe.Projet.Modele.Classes.Toilette;
 import com.Equipe.Projet.Modele.DAO.ToiletteDAO;
 import com.Equipe.Projet.Modele.Util.Connexion;
 import com.google.gson.Gson;
+import java.io.IOException;
 import java.sql.Connection;
 import java.util.LinkedList;
 import java.util.List;
@@ -27,7 +28,7 @@ public class ListeToiletteAjaxAction implements AjaxAction, RequestAware, Action
     
     @Override
     public String execute() {
-        String json = "";
+        String json = "[]";
         try {
             Class.forName("com.mysql.jdbc.Driver");
             Connection cnx;
@@ -36,9 +37,17 @@ public class ListeToiletteAjaxAction implements AjaxAction, RequestAware, Action
             List<Toilette> liste = new LinkedList<>();
             liste = daoToilette.findAll();
             json = new Gson().toJson(liste);
-            System.out.println("Je suis ici");
+            System.out.println("Je suis ici");           
+            Response.getWriter().write(json);
             return json;
         } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ListeToiletteAjaxAction.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(ListeToiletteAjaxAction.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        try {
+            Response.getWriter().write(json);
+        } catch (IOException ex) {
             Logger.getLogger(ListeToiletteAjaxAction.class.getName()).log(Level.SEVERE, null, ex);
         }
         return json;
