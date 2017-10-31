@@ -113,12 +113,60 @@
         </div>     
     </nav>
         <div id="map"></div>
-
+        
+        <div class="container-fluid" id="AjoutLieu">
+            <h3>Ajout d'une nouvelle Toilette
+            <form>
+                <div class="form-group">
+                  <label>Description:</label>
+                  <input type="text" class="form-control" id="usr">
+                </div>
+                <div class="form-group">
+                  <label>État</label>
+                  <select class="form-control" id="etat">
+                    <option value = "Public">Public</option>
+                    <option value = "Prive">Privé</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                    <label class="radio-inline">
+                        <input type="radio" name="optradio">Femme
+                        </label>
+                        <label class="radio-inline">
+                          <input type="radio" name="optradio">Homme
+                        </label>
+                        <label class="radio-inline">
+                          <input type="radio" name="optradio">Femme et Homme
+                    </label>
+                </div>
+            </form>
+        </div>
     </div>
       <script> 
+        //Fonction de placemements de marqueurs
+        //Cette Fonction est appelé pour placer des Lieu sur la map
+        function placeMarker(location,map,id){
+           var marker = new google.maps.Marker({
+                position: location,
+                map: map,
+                animation: google.maps.Animation.DROP                   
+            });            
+            //On lui ajoute une fenetre de details
+            var infoWindow = new google.maps.InfoWindow({
+                content: " </br>"+id+"<button type='button'>Sauvegarder</button><button type='button'>modifier</button>" 
+            });
+            // On ajoute des Listener sur le marqueur
+            marker.addListener('mouseover',function(){
+                infoWindow.open(map,marker);
+            });
+            marker.addListener('click',function(){
+                infoWindow.close(map,marker);
+            });
+            }
+        // Fonction qui initialise la map
         function initMap() {
         
-            //Carte
+            //La Carte est placé sur le div 'Map'
             var map = new google.maps.Map(document.getElementById('map'), {
                 zoom: 11,
                 center: {lat: 45.5017, lng: -73.5673},
@@ -127,29 +175,20 @@
                     style: google.maps.MapTypeControlStyle.DROPDOWN_MENU,
                     mapTypeIds: ['roadmap', 'terrain']
                 }
-            });
-            
-           
-            //ajout de marqueurs
-            
-            
+            }); 
             map.addListener('dblclick', function(e) {
                 placeMarker(e.latLng,map);               
             });
             
-           
-            //scripts pour la barre de recherche
-            
+            //Ajout d'une barre de recherche
             var input = document.getElementById('pac-input');
             var searchBox = new google.maps.places.SearchBox(input);
             map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
-            
-            
+ 
             map.addListener('bounds_changed', function() {
                 searchBox.setBounds(map.getBounds());
             });
-          
-            
+
             searchBox.addListener('places_changed', function() {
                 var places = searchBox.getPlaces();
 
@@ -157,7 +196,6 @@
                     return;
                 }
                 
-
                 var bounds = new google.maps.LatLngBounds();
             
                 places.forEach(function(place) {
@@ -177,32 +215,6 @@
                 //ajuste la vue de la carte autour de la recherche
                 map.fitBounds(bounds);
             });
-            
-            
-            //fonction de placemements de marqueurs
-            function placeMarker(location,map,id){
-                var marker = new google.maps.Marker({
-                    position: location,
-                    map: map,
-                    animation: google.maps.Animation.DROP                   
-                });
-            
-            
-                //fenetre de details
-                var infoWindow = new google.maps.InfoWindow({
-                   
-                   
-                   content: " </br>"+id+"<button type='button'>Sauvegarder</button><button type='button'>modifier</button>" 
-                   
-                });
-
-                marker.addListener('mouseover',function(){
-                    infoWindow.open(map,marker);
-                });
-                marker.addListener('click',function(){
-                   infoWindow.close(map,marker);
-                });
-            }
             //Sous-Fonction AJax/jQuery
             //Elle va chercher la liste des lieux dans l'action 'ListeToiletteAjax'
             //Elle recoit une chaine Json et place un marqueur dans sur la map
@@ -214,7 +226,9 @@
                 }
             });
         }
-        
+        function ajouterLieu(){
+            
+        }
         
     
         //ajout d'un marqueur avec un click
