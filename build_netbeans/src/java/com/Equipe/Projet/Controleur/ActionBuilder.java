@@ -17,6 +17,8 @@ public class ActionBuilder {
                     return new CreerCompteAction();
                 case "ListeToiletteAjax":
                     return new ListeToiletteAjaxAction();
+                case "CreerLieuAjax":
+                    return new CreerLieuAjaxAction();
             }
         return new DefaultAction();
     }

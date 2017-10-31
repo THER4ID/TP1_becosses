@@ -8,11 +8,8 @@ package com.Equipe.Projet.Controleur;
 import com.Equipe.Projet.Modele.Classes.Toilette;
 import com.Equipe.Projet.Modele.DAO.ToiletteDAO;
 import com.Equipe.Projet.Modele.Util.Connexion;
-import com.google.gson.Gson;
 import java.io.IOException;
 import java.sql.Connection;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
@@ -22,33 +19,36 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author Le Paré
  */
-public class ListeToiletteAjaxAction implements AjaxAction, RequestAware, Action {
+public class CreerLieuAjaxAction implements AjaxAction, RequestAware, Action  {
     private HttpServletRequest Request;
     private HttpServletResponse Response;
-    
     @Override
     public String execute() {
-        String json = "[]";
+        String valider = "False";
+        Toilette tempToilette = new Toilette();
+        tempToilette.setCompteId(Integer.parseInt(Request.getParameter("CompteId")));
+        tempToilette.setEtat(Integer.parseInt(Request.getParameter("Etat")));
+        tempToilette.setTypeDeService(Integer.parseInt(Request.getParameter("TypeDeService")));
+        tempToilette.setLatitude(Double.parseDouble(Request.getParameter("Latitude")));
+        tempToilette.setLongitude(Double.parseDouble(Request.getParameter("Longitude")));
+        tempToilette.setDescription(Request.getParameter("Latitude"));
         try {
             Class.forName("com.mysql.jdbc.Driver");
             Connection cnx;
             cnx = Connexion.getInstance();
             ToiletteDAO daoToilette = new ToiletteDAO(cnx);
-            List<Toilette> liste = new LinkedList<>();
-            liste = daoToilette.findAll();
-            json = new Gson().toJson(liste);
-            System.out.println("Je suis ici");           
-            Response.getWriter().write(json);
-            return json;
+            daoToilette.create(tempToilette);
+            valider = "true";
+            Response.getWriter().write(valider);
         } catch (ClassNotFoundException | IOException ex) {
-            Logger.getLogger(ListeToiletteAjaxAction.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CreerLieuAjaxAction.class.getName()).log(Level.SEVERE, null, ex);         
         }
         try {
-            Response.getWriter().write(json);
+            Response.getWriter().write(valider);
         } catch (IOException ex) {
-            Logger.getLogger(ListeToiletteAjaxAction.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CreerLieuAjaxAction.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return json;
+        return valider;
     }
     @Override
     public void setRequest(HttpServletRequest r) {
@@ -59,6 +59,7 @@ public class ListeToiletteAjaxAction implements AjaxAction, RequestAware, Action
     public void setResponse(HttpServletResponse r) {
         this.Response = r;
     }
+
 
     
 }
