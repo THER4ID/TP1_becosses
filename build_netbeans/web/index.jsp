@@ -89,7 +89,10 @@
             }
             #target {
               width: 345px;
-            }           
+            }
+            #FormAjoutLieu{ 
+                margin: 200px 50px 75px 50px;
+            }
         </style>
     </head>
   <body>
@@ -115,11 +118,11 @@
         <div id="map"></div>
         
         <div class="container-fluid" id="AjoutLieu">
-            <h3>Ajout d'une nouvelle Toilette
-            <form>
+            <form id ="FormAjoutLieu">
+                <h3>Ajout d'une nouvelle Toilette</h3>
                 <div class="form-group">
                   <label>Description:</label>
-                  <input type="text" class="form-control" id="usr">
+                  <input type="text-area" class="form-control" id="usr">
                 </div>
                 <div class="form-group">
                   <label>État</label>
@@ -130,13 +133,13 @@
                 </div>
                 <div class="form-group">
                     <label class="radio-inline">
-                        <input type="radio" name="optradio">Femme
+                        <input type="radio" name="optradio">Homme
                         </label>
                         <label class="radio-inline">
-                          <input type="radio" name="optradio">Homme
+                          <input type="radio" name="optradio">Femme
                         </label>
                         <label class="radio-inline">
-                          <input type="radio" name="optradio">Femme et Homme
+                          <input type="radio" name="optradio">Homme et Femme
                     </label>
                 </div>
             </form>
@@ -218,7 +221,7 @@
             //Sous-Fonction AJax/jQuery
             //Elle va chercher la liste des lieux dans l'action 'ListeToiletteAjax'
             //Elle recoit une chaine Json et place un marqueur dans sur la map
-            $.getJSON('ListeToilette.action?Action=ListeToiletteAjax',function(data,status){
+            $.getJSON('ListeToilette.action?Action=ListeToiletteAjax',function(data,status){  
                 var nombreDeLieu = Object.keys(data).length;
                 for(i=0;i<nombreDeLieu;i++){
                     var positionToilette = {lng:data[i].Longitude,lat:data[i].Latitude };
