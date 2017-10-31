@@ -92,7 +92,7 @@
             }
             #FormAjoutLieu{ 
                 margin: 200px 50px 75px 50px;
-            }
+            }           
         </style>
     </head>
   <body>
@@ -122,26 +122,27 @@
                 <h3>Ajout d'une nouvelle Toilette</h3>
                 <div class="form-group">
                   <label>Description:</label>
-                  <input type="text-area" class="form-control" id="usr">
+                  <textarea class="form-control" rows="5" id="description"></textarea>
                 </div>
                 <div class="form-group">
                   <label>État</label>
                   <select class="form-control" id="etat">
-                    <option value = "Public">Public</option>
-                    <option value = "Prive">Privé</option>
+                    <option value = "0">Public</option>
+                    <option value = "1">Privé</option>
                   </select>
                 </div>
                 <div class="form-group">
                     <label class="radio-inline">
-                        <input type="radio" name="optradio">Homme
-                        </label>
-                        <label class="radio-inline">
-                          <input type="radio" name="optradio">Femme
-                        </label>
-                        <label class="radio-inline">
-                          <input type="radio" name="optradio">Homme et Femme
+                        <input type="radio" name="radioTypeDeService" Value="0">Homme
+                    </label>
+                    <label class="radio-inline">
+                          <input type="radio" name="radioTypeDeService" Value="1">Femme
+                    </label>
+                    <label class="radio-inline">
+                          <input type="radio" name="radioTypeDeService" Value="2">Homme et Femme
                     </label>
                 </div>
+                <button type="button" id="boutonCreerLieu" class="btn btn-success">Créer</button> 
             </form>
         </div>
     </div>
@@ -168,7 +169,7 @@
             }
         // Fonction qui initialise la map
         function initMap() {
-        
+            $( "#AjoutLieu" ).toggle();
             //La Carte est placé sur le div 'Map'
             var map = new google.maps.Map(document.getElementById('map'), {
                 zoom: 11,
@@ -179,8 +180,9 @@
                     mapTypeIds: ['roadmap', 'terrain']
                 }
             }); 
-            map.addListener('dblclick', function(e) {
-                placeMarker(e.latLng,map);               
+            map.addListener('dblclick', function(event) {
+                placeMarker(event.latLng,map);
+                ajouterLieu(event.latLng.lat(),event.latLng.lng());
             });
             
             //Ajout d'une barre de recherche
@@ -217,7 +219,7 @@
                 });
                 //ajuste la vue de la carte autour de la recherche
                 map.fitBounds(bounds);
-            });
+            });           
             //Sous-Fonction AJax/jQuery
             //Elle va chercher la liste des lieux dans l'action 'ListeToiletteAjax'
             //Elle recoit une chaine Json et place un marqueur dans sur la map
@@ -229,8 +231,22 @@
                 }
             });
         }
-        function ajouterLieu(){
-            
+        // Fonction qui ajoute un lieu à la map
+        // Elle fonctionne, Je dois finir la vérification des champs
+        function ajouterLieu(Latitude,Longitude){
+            $("#AjoutLieu").toggle();
+            $('html, body').animate({
+                scrollTop: $("#FormAjoutLieu").offset().top}, 2000);
+            $("#boutonCreerLieu").click(function() {
+                alert(Latitude+" "+$("#description").val()+"  "+$("#etat").val()+"   "+$("input[name=radioTypeDeService]:checked").val());
+                var desc =$("#description").val();
+                var etat = $("#etat").val();
+                var tds = $("input[name=radioTypeDeService]:checked").val();
+                $.getJSON('CreerLieu.action?Action=CreerLieuAjax&Description='+desc+'&Etat='+etat+'&TypeDeService='+tds
+                        +'&Latitude='+Latitude+'&Longitude='+Longitude+'&CompteId=1',function(data,status){
+                        alert(data); 
+                });
+            });
         }
         
     

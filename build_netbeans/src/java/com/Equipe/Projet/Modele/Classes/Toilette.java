@@ -14,7 +14,7 @@ public class Toilette extends Lieu {
     }
     //Getter et setter
     public int getTypeDeService() {
-        return TypeDeService;
+        return TypeDeService; 
     }
 
     public Toilette() {
