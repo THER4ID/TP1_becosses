@@ -123,10 +123,11 @@
         <div class="login-page">
             <div class="form">     
               </form>
-              <form class="login-form" action ="creercompte.action" method="post">
+              <form class="login-form" action ="creation.action" method="post">
+                <input type ='hidden' name='Action' value="creation" />
                 <input type="text" placeholder="Prénom" name="prenom"/>
                 <input type="text" placeholder="Nom" name="nom"/>
-                <input type="text" placeholder="Nom d'utilisateur" name="username"/>
+                <input type="number" placeholder="age" name ="age"/>
                 <input type="password" placeholder="mot de passe" name="mdpcreer"/>
                 <input type="text" placeholder="adresse courriel" name="courrielcreer"/>
                 <button>créer le compte</button>

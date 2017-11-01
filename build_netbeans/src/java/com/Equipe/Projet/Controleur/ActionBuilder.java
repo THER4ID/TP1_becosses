@@ -21,6 +21,10 @@ public class ActionBuilder {
                     return new CreerLieuAjaxAction();
                 case "connection":
                     return new LoginAction();
+                case "deconnexion":
+                    return new ActionDeconnexion();
+                case "creation":
+                    return new CreerCompteAction();
             }
         return new DefaultAction();
     }

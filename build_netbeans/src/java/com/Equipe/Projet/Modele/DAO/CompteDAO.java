@@ -59,6 +59,7 @@ public class CompteDAO extends DAO<Compte> {
         
         try
         {
+
             stm = cnx.createStatement();
             r = stm.executeQuery("SELECT * FROM compte WHERE Courriel = '"+courriel+"'");
             if(r.next())

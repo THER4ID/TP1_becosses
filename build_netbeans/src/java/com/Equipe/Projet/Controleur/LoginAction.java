@@ -42,33 +42,27 @@ public class LoginAction implements RequestAware, Action{
             Class.forName("com.mysql.jdbc.Driver");
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(LoginAction.class.getName()).log(Level.SEVERE, null, ex);
+            ex.printStackTrace();
         }
         
         Connection cnx;
         cnx = Connexion.getInstance();       
         CompteDAO dao = new CompteDAO(cnx);
         Compte c = new Compte();
-        HttpSession session = Request.getSession();
+        HttpSession session = Request.getSession(true);
         
         System.out.println("debut!!!");
        
             
         c = dao.FindByCourriel(courriel);
-        
-        System.out.println(c.getMotDePasse());
-        System.out.println(motdepasse);
-        System.out.println(c.getMotDePasse().length());
-        System.out.println(motdepasse.length());
         try{
         
             if(!(c.getMotDePasse().equals(motdepasse))){
                 Request.setAttribute("message","mot de passe invalide");
-                System.out.println("pas connecter");
                 return "/PageConnexion.jsp";
             }
             else{
                 session.setAttribute("IdConnect",c.getIdCompte());
-                System.out.println("connecter");
                 return "/index.jsp";
             }
         
