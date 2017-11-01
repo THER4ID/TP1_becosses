@@ -97,11 +97,11 @@
     <nav class="navbar navbar-default">
         <div class="container-fluid">
           <div class="navbar-header">
-            <a class="navbar-brand" href="#">Toilettes</a>
+            <a class="navbar-brand" id="titre" href="#">Toilettes</a>
           </div>
           <ul class="nav navbar-nav">
             <li class="active"><a href="#">Accueil</a></li>
-            <li><a href="#">Favoris</a></li>
+            <li><a id="fav" href="#">Favoris</a></li>
             <li><a href="#">Sauvegarder</a></li>
             <input id="pac-input" class="controls" type="text" placeholder="Search Box">
             <li><a href="PageConnexion.jsp" class="connection">Se Connecter</a>
@@ -186,16 +186,22 @@
                     map: map,
                     animation: google.maps.Animation.DROP
                 });
+                
             
-            
-                //fenetre de details
+                var text = "ajoutez la description ici!!";
                 var infoWindow = new google.maps.InfoWindow({
                    
-                   
-                   content: " </br><button type='button'>Sauvegarder</button><button type='button'>modifier</button>" 
-                   
+                   content: "<div id='commentaire'>" + text + "</div><button type='button'>Sauvegarder</button><button id ='modif' type='button'>modifier</button>"
+                });
+                
+                google.maps.event.addListener(infoWindow,'domready',function(){
+                    
+                    $("#modif").on('click', function () {
+                        $("#commentaire").html("<textarea>" + text + "</textarea>");
+                    });
                 });
 
+                
                 marker.addListener('mouseover',function(){
                     infoWindow.open(map,marker);
                 });
@@ -210,10 +216,11 @@
                     placeMarker(positionToilette,map);
                 }
             });
+            
+    
         }
         
-        
-    
+       
         //ajout d'un marqueur avec un click
         
     </script>

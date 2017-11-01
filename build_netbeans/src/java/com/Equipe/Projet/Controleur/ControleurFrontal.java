@@ -34,6 +34,7 @@ public class ControleurFrontal extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
                 String requestAction = request.getParameter("Action");
+                System.out.println(requestAction);
                 Action action = ActionBuilder.getAction(requestAction);
                 if (action instanceof RequestAware) {
                    ((RequestAware)action).setRequest(request);
@@ -42,11 +43,13 @@ public class ControleurFrontal extends HttpServlet {
                 if (action instanceof SessionAware) {
                    ((SessionAware)action).setSession(request.getSession(true));
                 }
+                
                 String vue = action.execute();
                 if(!(action instanceof AjaxAction)){
                     this.getServletContext().getRequestDispatcher(vue).forward(request, response);
                     System.out.println("NON");
                 }
+                
                 System.out.println(vue);
 
     }

@@ -3,13 +3,10 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/E:/travaux/programmation/Java/Java%20EE/TP1/TP1_becosses/build_netbeans/src/java/com/Equipe/Projet/Controleur/ListeToiletteAjaxAction.java</file>
-            <file>file:/E:/travaux/programmation/Java/Java%20EE/TP1/TP1_becosses/build_netbeans/src/java/com/Equipe/Projet/Modele/DAO/Main.java</file>
-            <file>file:/E:/travaux/programmation/Java/Java%20EE/TP1/TP1_becosses/build_netbeans/web/PageConnexion.jsp</file>
-            <file>file:/E:/travaux/programmation/Java/Java%20EE/TP1/TP1_becosses/build_netbeans/web/CreerCompte.jsp</file>
-            <file>file:/E:/travaux/programmation/Java/Java%20EE/TP1/TP1_becosses/build_netbeans/web/index.jsp</file>
-            <file>file:/E:/travaux/programmation/Java/Java%20EE/TP1/TP1_becosses/build_netbeans/src/java/com/Equipe/Projet/Modele/DAO/CompteDAO.java</file>
-            <file>file:/E:/travaux/programmation/Java/Java%20EE/TP1/TP1_becosses/build_netbeans/src/java/com/Equipe/Projet/Modele/Classes/Compte.java</file>
+            <file>file:/F:/travaux/programmation/Java/Java%20EE/TP1/TP1_becosses/build_netbeans/build/web/PageConnexion.jsp</file>
+            <file>file:/F:/travaux/programmation/Java/Java%20EE/TP1/TP1_becosses/build_netbeans/src/java/com/Equipe/Projet/Controleur/ControleurFrontal.java</file>
+            <file>file:/F:/travaux/programmation/Java/Java%20EE/TP1/TP1_becosses/build_netbeans/src/java/com/Equipe/Projet/Controleur/ActionBuilder.java</file>
+            <file>file:/F:/travaux/programmation/Java/Java%20EE/TP1/TP1_becosses/build_netbeans/web/index.jsp</file>
         </group>
     </open-files>
 </project-private>

@@ -23,15 +23,23 @@ public class Main {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+       
        Connection cnx;
        cnx = Connexion.getInstance();
+       /*
        ToiletteDAO daoToilette = new ToiletteDAO(cnx);
        List<Toilette> liste = new LinkedList<>();
        liste = daoToilette.findAll();
        String json = new Gson().toJson(liste);
        System.out.println(json);
-       //CompteDAO dao = new CompteDAO(cnx);
-       //Compte cpt = new Compte(1,"f@mail.com","f","Pare","Francis",13,"Montreal");
+       */
+       CompteDAO dao = new CompteDAO(cnx);
+       List<Compte> listeCompte = new LinkedList<>();
+       Compte cpt = new Compte(1,"f@mail.com","f","Pare","Francis",13,"Montreal");
+       dao.create(cpt);
+       listeCompte = dao.findAll();
+       String json = new Gson().toJson(listeCompte);
+       System.out.println(json);
       // System.out.println(dao.create(cpt));
     }
     
