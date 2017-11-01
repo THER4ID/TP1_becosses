@@ -142,7 +142,8 @@
                           <input type="radio" name="radioTypeDeService" Value="2">Homme et Femme
                     </label>
                 </div>
-                <button type="button" id="boutonCreerLieu" class="btn btn-success">Créer</button> 
+                <button type="button" id="boutonCreerLieu" class="btn btn-success">Créer</button>
+                <button type="button" class="btn btn-success annuler">Annuler</button> 
             </form>
         </div>
     </div>
@@ -181,7 +182,6 @@
                 }
             }); 
             map.addListener('dblclick', function(event) {
-                placeMarker(event.latLng,map);
                 ajouterLieu(event.latLng.lat(),event.latLng.lng());
             });
             
@@ -231,6 +231,22 @@
                 }
             });
         }
+        function afficherLieu(){
+            $.getJSON('ListeToilette.action?Action=ListeToiletteAjax',function(data,status){  
+                var nombreDeLieu = Object.keys(data).length;
+                for(i=0;i<nombreDeLieu;i++){
+                    var positionToilette = {lng:data[i].Longitude,lat:data[i].Latitude };
+                    placeMarker(positionToilette,map,data[i].Id);
+                }
+            });
+        }
+        //Function de démarrage
+        $( document ).ready(function() {
+            // On ajoute un evenement click sur les boutons de classe annuler pour afficher l'image
+            $(".annuler").click(function(){
+                $("#AjoutLieu").toggle();
+            });
+        });
         // Fonction qui ajoute un lieu à la map
         // Elle fonctionne, Je dois finir la vérification des champs
         function ajouterLieu(Latitude,Longitude){
@@ -242,10 +258,15 @@
                 var desc =$("#description").val();
                 var etat = $("#etat").val();
                 var tds = $("input[name=radioTypeDeService]:checked").val();
-                $.getJSON('CreerLieu.action?Action=CreerLieuAjax&Description='+desc+'&Etat='+etat+'&TypeDeService='+tds
-                        +'&Latitude='+Latitude+'&Longitude='+Longitude+'&CompteId=1',function(data,status){
-                        alert(data); 
-                });
+                if ($.trim(desc) !== "" & tds < 3){                  
+                    $.getJSON('CreerLieu.action?Action=CreerLieuAjax&Description='+desc+'&Etat='+etat+'&TypeDeService='+tds
+                            +'&Latitude='+Latitude+'&Longitude='+Longitude+'&CompteId=1',function(data,status){
+                    });
+                    google.maps.event.trigger(map, 'resize');
+                    $("#AjoutLieu").toggle();
+                }else {
+                    alert("Veuillez remplir tous les champs !!");
+                }
             });
         }
         
