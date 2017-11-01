@@ -150,11 +150,12 @@
       <script> 
         //Fonction de placemements de marqueurs
         //Cette Fonction est appelé pour placer des Lieu sur la map
-        function placeMarker(location,map,id){
+        function placeMarker(location,map,icone,id){
            var marker = new google.maps.Marker({
                 position: location,
                 map: map,
-                animation: google.maps.Animation.DROP                   
+                animation: google.maps.Animation.DROP,  
+                icon: icone
             });            
             //On lui ajoute une fenetre de details
             var infoWindow = new google.maps.InfoWindow({
@@ -226,8 +227,14 @@
             $.getJSON('ListeToilette.action?Action=ListeToiletteAjax',function(data,status){  
                 var nombreDeLieu = Object.keys(data).length;
                 for(i=0;i<nombreDeLieu;i++){
-                    var positionToilette = {lng:data[i].Longitude,lat:data[i].Latitude };
-                    placeMarker(positionToilette,map,data[i].Id);
+                    var positionToilette = {lng:data[i].Longitude,lat:data[i].Latitude};
+                    //if(data[i].Etat ===0){
+                        var icone = {
+                            url:"./Multimedia/toilette_prive_fermee.png",
+                            scaledSize: new google.maps.Size(55, 55)
+                        };
+                    //}
+                    placeMarker(positionToilette,map,icone,data[i].Id);
                 }
             });
         }
@@ -261,8 +268,7 @@
                 if ($.trim(desc) !== "" & tds < 3){                  
                     $.getJSON('CreerLieu.action?Action=CreerLieuAjax&Description='+desc+'&Etat='+etat+'&TypeDeService='+tds
                             +'&Latitude='+Latitude+'&Longitude='+Longitude+'&CompteId=1',function(data,status){
-                    });
-                    google.maps.event.trigger(map, 'resize');
+                    }); 
                     $("#AjoutLieu").toggle();
                 }else {
                     alert("Veuillez remplir tous les champs !!");

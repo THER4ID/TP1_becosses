@@ -19,6 +19,8 @@ public class ActionBuilder {
                     return new ListeToiletteAjaxAction();
                 case "CreerLieuAjax":
                     return new CreerLieuAjaxAction();
+                case "connection":
+                    return new LoginAction();
             }
         return new DefaultAction();
     }
