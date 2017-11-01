@@ -14,7 +14,6 @@
     
     <style>
         @import url(https://fonts.googleapis.com/css?family=Roboto:300);
-
         .login-page {
           width: 360px;
           padding: 8% 0 0;
@@ -125,10 +124,12 @@
         <div class="login-page">
             <div class="form">
               
-              <form class="login-form">
-                <input type="text" placeholder="Nom d'utilisateur"/>
-                <input type="password" placeholder="Mot de passe"/>
-                <button>se connecter</button>
+              <form class="login-form" action= "connection.action" method="post">
+                <span class="errorMessage"><c:out value="${requestScope.message}" /></span>
+                <input type ='hidden' name='Action' value="connexion" />
+                <input  type="text" placeholder="Nom d'utilisateur" name="courriel"/>
+                <input type="password" placeholder="Mot de passe" name="mdp"/>
+                <button type='submit'>se connecter</button>
                 <p class="message">Nouvel utilisateur? <a href="CreerCompte.jsp">Créer un Compte</a></p>
               </form>
             </div>

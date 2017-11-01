@@ -13,7 +13,6 @@
     </head>
      <style>
         @import url(https://fonts.googleapis.com/css?family=Roboto:300);
-
         .login-page {
           width: 360px;
           padding: 8% 0 0;
@@ -124,12 +123,12 @@
         <div class="login-page">
             <div class="form">     
               </form>
-              <form class="login-form">
-                <input type="text" placeholder="Prénom"/>
-                <input type="text" placeholder="Nom"/>
-                <input type="text" placeholder="Nom d'utilisateur"/>
-                <input type="password" placeholder="mot de passe"/>
-                <input type="text" placeholder="adresse courriel"/>
+              <form class="login-form" action ="creercompte.action" method="post">
+                <input type="text" placeholder="Prénom" name="prenom"/>
+                <input type="text" placeholder="Nom" name="nom"/>
+                <input type="text" placeholder="Nom d'utilisateur" name="username"/>
+                <input type="password" placeholder="mot de passe" name="mdpcreer"/>
+                <input type="text" placeholder="adresse courriel" name="courrielcreer"/>
                 <button>créer le compte</button>
                 <p class="message">déjà un compte? <a href="PageConnexion.Jsp">Se connecter</a></p>
               </form>
