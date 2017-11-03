@@ -99,6 +99,52 @@ public class CompteDAO extends DAO<Compte> {
         return null;
     }
     
+    
+        public Compte FindById(int id) {
+        Statement stm = null;
+        ResultSet r = null;
+        
+        try
+        {
+            stm = cnx.createStatement();
+            r = stm.executeQuery("SELECT * FROM compte WHERE IdCompte = '"+id+"'");
+            if(r.next())
+            {
+                Compte c = new Compte();
+                c.setIdCompte(r.getInt("IdCompte"));
+                c.setCourriel(r.getString("Courriel"));
+                c.setMotDePasse(r.getString("MotDePasse"));
+                c.setNom(r.getString("Nom"));
+                c.setPrenom(r.getString("Prenom"));
+                c.setAge(r.getInt("Age"));
+                c.setVille(r.getString("Ville"));
+                r.close();
+                stm.close();
+                return c;
+                
+            }
+        }
+        catch(SQLException exp)
+        {
+        }
+        finally
+        {
+            if (stm!=null)
+            {
+                try
+                {
+                    r.close();
+                    stm.close();
+                }
+                catch(SQLException e)
+                {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return null;
+    }
+    
     @Override
     public List<Compte> findAll() {
         List<Compte> liste = new LinkedList();
