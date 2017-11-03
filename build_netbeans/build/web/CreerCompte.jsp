@@ -118,6 +118,7 @@
         $('.message a').click(function(){
             $('form').animate({height: "toggle", opacity: "toggle"}, "slow");
         });
+       
     </script>
     <body>
         <div class="login-page">
@@ -125,12 +126,14 @@
               </form>
               <form class="login-form" action ="creation.action" method="post">
                 <input type ='hidden' name='Action' value="creation" />
+                <span class="errorMessage"><c:out value="${requestScope.message}" /></span>
                 <input type="text" placeholder="Prénom" name="prenom"/>
                 <input type="text" placeholder="Nom" name="nom"/>
-                <input type="number" placeholder="age" name ="age"/>
+                <input type="number" placeholder="age" name ="age" />
+                <input type="text" placeholder="ville" name="villecreer"/>
                 <input type="password" placeholder="mot de passe" name="mdpcreer"/>
                 <input type="text" placeholder="adresse courriel" name="courrielcreer"/>
-                <button>créer le compte</button>
+                <button id="register" disabled="disabled">créer le compte</button>
                 <p class="message">déjà un compte? <a href="PageConnexion.Jsp">Se connecter</a></p>
               </form>
             </div>

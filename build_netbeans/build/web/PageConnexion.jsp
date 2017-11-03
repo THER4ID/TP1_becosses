@@ -126,6 +126,8 @@
               
               <form class="login-form" action= "connection.action" method="post">
                 <span class="errorMessage"><c:out value="${requestScope.message}" /></span>
+                <p>Message: ${message}</p>
+                <c:remove var="message" scope="session" /> 
                 <input type ='hidden' name='Action' value="connection" />
                 <input  type="text" placeholder="Nom d'utilisateur" name="courriel"/>
                 <input type="password" placeholder="Mot de passe" name="mdp"/>
