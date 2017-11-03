@@ -6,9 +6,13 @@
 package com.Equipe.Projet.Modele.DAO;
 
 import com.Equipe.Projet.Modele.Classes.Commentaire;
+import com.Equipe.Projet.Modele.Classes.Compte;
+import com.Equipe.Projet.Modele.Classes.Toilette;
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -23,9 +27,8 @@ public class CommentaireDAO extends DAO<Commentaire> {
 
     @Override
     public boolean create(Commentaire c) {
-        String req = "INSERT INTO commemntaire (`IDCOMPTE` , `IDTOILETTE` , `TEXTE`) "+
+        String req = "INSERT INTO commentaire (`IDCOMPTE` , `IDTOILETTE` , `TEXTE`) "+
 			     "VALUES ('"+c.getIdCompteCreateur()+"','"+c.getIdLieuCommenter()+"','"+c.getTexte()+"')";
-		//System.out.println("REQUETE "+req);
 		Statement stm = null;
 		try 
 		{
@@ -52,9 +55,33 @@ public class CommentaireDAO extends DAO<Commentaire> {
 		}
 		return false;
     }
-    public List<Commentaire> FindByIdDeLieu(int id){
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+    public List<Commentaire> FindByIdDeLieu(int idLieu){
+		List<Commentaire> liste = new LinkedList<>();
+		try 
+		{
+			Statement stmCommentaire = cnx.createStatement();                       
+			ResultSet resCommentaire = stmCommentaire.executeQuery("SELECT * FROM commentaire WHERE IdToilette ='"+idLieu+"'");
+
+			while (resCommentaire.next())
+			{
+                                Commentaire c = new Commentaire();
+                                c.setIdCommentaire(resCommentaire.getInt("IdCommentaire"));
+                                c.setIdCompteCreateur(resCommentaire.getInt("IdCompte"));
+                                c.setTexte(resCommentaire.getString("Texte"));
+                                c.setIdLieuCommenter(resCommentaire.getInt("IdToilette"));
+				liste.add(c);
+			}
+			resCommentaire.close();
+			stmCommentaire.close();
+		}
+		catch (SQLException exp)
+		{
+		}
+		return liste;
+	}
+
+                
+
     @Override
     public Commentaire read(int id) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.

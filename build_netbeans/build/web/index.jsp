@@ -149,10 +149,18 @@
         <div class="container-fluid" id="AfficherCommentaire">
             <h3>Zone Commentaire de la Toilette</h3>
             <div id='ListeCommentaire'>
-                
+            </div>
+            <div id='Commenter'>
+                <div class='col-sm-4 col-lg-8 col-md-8'>
+                    <form>
+                        <h4>Commentez : </h4>
+                        <textarea class="form-control" rows="5" id="description"></textarea>
+                        <span><button type="button" id="boutonCreerCommentaire" class="btn btn-success">Envoyez</button></span>
+                    </form>
+                </div>
             </div>
         </div>
-      <script> 
+      <script>           
         //Fonction de placemements de marqueurs
         //Cette Fonction est appelé pour placer des Lieu sur la map
         function placeMarker(location,map,icone,idLieu,desc,etat,typeDeService,idCreateur){
@@ -165,7 +173,7 @@
             //On lui ajoute une fenetre de details
             var infoWindow = new google.maps.InfoWindow({
                 content: "<div id='bodyInfo'> </br> id du lieu:"+idLieu+"</br> description: "+desc+"</br> Etat: "+etat+"</br>\n\
-                Type de service: "+typeDeService+"</br> Id compte Créateur:"+idCreateur+"<button type='button'>Sauvegarder</button><button onclick=alert('Bonjours') type='button'>Commentaire</button><div>" 
+                Type de service: "+typeDeService+"</br> Id compte Créateur:"+idCreateur+"<button type='button'>Sauvegarder</button><button onclick=ListerLesCommentaire("+idLieu+") type='button'>Commentaire</button><div>" 
             });
             // On ajoute des Listener sur le marqueur
             marker.addListener('mouseover',function(){
@@ -228,7 +236,8 @@
                 });
                 //ajuste la vue de la carte autour de la recherche
                 map.fitBounds(bounds);
-            });           
+            });
+            //ListerLieur();
             //Sous-Fonction AJax/jQuery
             //Elle va chercher la liste des lieux dans l'action 'ListeToiletteAjax'
             //Elle recoit une chaine Json et place un marqueur sur la map
@@ -245,11 +254,11 @@
                 }
             });
         }
-        
-        
+
+      
         //Function de démarrage
         $( document ).ready(function() {
-            // On ajoute un evenement click sur les boutons de classe annuler pour afficher l'image
+            // On ajoute un evenement click sur les boutons de classe annuler
             $(".annuler").click(function(){
                 $("#AjoutLieu").toggle();
             });
@@ -273,6 +282,41 @@
                     $("#FormAjoutLieu")[0].reset();
                 }else {
                     alert("Veuillez remplir tous les champs !!");
+                }
+            });
+        }
+        
+        // FOnction Ajax Jquery
+        // Lorsque l'utilisateur clique sur le bouton commentaire dans la fenêtre d'un lieu,
+        // on affaiche tous les commentaire de ce lieu dans la zon de commentaire qui s'ouvre lors
+        // du clique.
+        function ListerLesCommentaire(idLieu){
+            // On efface tous les commentaires précédent
+            $("#ListeCommentaire").empty();
+            // On affiche la zone de commentaire avec une animation
+            $("#AfficherCommentaire").toggle();
+            $('html, body').animate({
+                scrollTop: $("#AfficherCommentaire").offset().top}, 2000);
+            // On va chercher tous les commentaire du Lieu qui vien d'être cliquer
+            $.getJSON('ListeCommentaire.action?Action=ListeCommentaireAjax&idLieu='+idLieu,function(dataCom,status){
+                var nombreDeLieu = Object.keys(dataCom).length;
+                // On fait une boucle d'affichage qui affiche tous les commentaires
+                for(i=0;i<nombreDeLieu;i++){
+                    var texteCommentaire = dataCom[i].Texte;
+                    // On va chercher le compte du créateur de chaque commentaire pour afficher son nom
+                    $.getJSON('GetCompte.action?Action=GetCompteAjax&idCompte='+dataCom[i].IdCompteCreateur,function(dataCpt,status){
+                            // Chaque commentaire est placé dans un panel qu'on affiche à l'écran
+                            var commentaireHtml =  "<div class='col-sm-4 col-lg-8 col-md-8'>"+
+                                            "<div class='panel panel-primary'>"+
+                                                "<div class='panel-heading'><span class='glyphicon glyphicon-user'></span><span> "+dataCpt.Prenom+" "+dataCpt.Nom+"</span></div>"+
+                                                "<div class='panel-body'>"+		
+                                                    "<p>"+texteCommentaire+"</p>";+
+                                                "</div>"+
+                                            "</div>"+
+                                        "</div>";
+                        // On ajoute le commentaire au DIV LiisteCommentaire
+                        $("#ListeCommentaire").append(commentaireHtml);
+                    });
                 }
             });
         }
