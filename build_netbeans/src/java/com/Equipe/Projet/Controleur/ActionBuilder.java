@@ -25,6 +25,10 @@ public class ActionBuilder {
                     return new ActionDeconnexion();
                 case "creation":
                     return new CreerCompteAction();
+                case"ListeCommentaireAjax":
+                    return new ListeCommentaireAjaxAction();
+                case "GetCompteAjax":
+                    return new GetCompteAjaxAction();
             }
         return new DefaultAction();
     }

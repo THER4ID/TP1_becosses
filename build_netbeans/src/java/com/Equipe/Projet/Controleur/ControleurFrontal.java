@@ -45,9 +45,8 @@ public class ControleurFrontal extends HttpServlet {
                 String vue = action.execute();
                 if(!(action instanceof AjaxAction)){
                     this.getServletContext().getRequestDispatcher(vue).forward(request, response);
-                    System.out.println("NON, ce n'est pas du ajax");
                 }
-                System.out.println("JSON :" + vue);
+
 
     }
                 

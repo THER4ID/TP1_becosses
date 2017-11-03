@@ -19,6 +19,10 @@ public class Commentaire {
     }
     //Getter et Setter
 
+    public Commentaire() {
+
+    }
+
     public int getIdCommentaire() {
         return IdCommentaire;
     }

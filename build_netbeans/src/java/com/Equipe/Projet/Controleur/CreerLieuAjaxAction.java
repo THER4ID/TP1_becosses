@@ -31,7 +31,7 @@ public class CreerLieuAjaxAction implements AjaxAction, RequestAware, Action  {
         tempToilette.setTypeDeService(Integer.parseInt(Request.getParameter("TypeDeService")));
         tempToilette.setLatitude(Double.parseDouble(Request.getParameter("Latitude")));
         tempToilette.setLongitude(Double.parseDouble(Request.getParameter("Longitude")));
-        tempToilette.setDescription(Request.getParameter("Latitude"));
+        tempToilette.setDescription(Request.getParameter("Description"));
         try {
             Class.forName("com.mysql.jdbc.Driver");
             Connection cnx;
