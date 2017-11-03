@@ -90,8 +90,8 @@
             #target {
               width: 345px;
             }
-            #FormAjoutLieu{ 
-                margin: 200px 50px 75px 50px;
+            #FormAjoutLieu, #AfficherCommentaire{ 
+                margin: 220px 50px 75px 50px;
             }           
         </style>
     </head>
@@ -146,11 +146,24 @@
                 <button type="button" class="btn btn-success annuler">Annuler</button> 
             </form>
         </div>
-    </div>
-      <script> 
+        <div class="container-fluid" id="AfficherCommentaire">
+            <h3>Zone Commentaire de la Toilette</h3>
+            <div id='ListeCommentaire'>
+            </div>
+            <div id='Commenter'>
+                <div class='col-sm-4 col-lg-8 col-md-8'>
+                    <form>
+                        <h4>Commentez : </h4>
+                        <textarea class="form-control" rows="5" id="description"></textarea>
+                        <span><button type="button" id="boutonCreerCommentaire" class="btn btn-success">Envoyez</button></span>
+                    </form>
+                </div>
+            </div>
+        </div>
+      <script>           
         //Fonction de placemements de marqueurs
         //Cette Fonction est appelé pour placer des Lieu sur la map
-        function placeMarker(location,map,icone,id){
+        function placeMarker(location,map,icone,idLieu,desc,etat,typeDeService,idCreateur){
            var marker = new google.maps.Marker({
                 position: location,
                 map: map,
@@ -159,7 +172,8 @@
             });            
             //On lui ajoute une fenetre de details
             var infoWindow = new google.maps.InfoWindow({
-                content: " </br>"+id+"<button type='button'>Sauvegarder</button><button type='button'>modifier</button>" 
+                content: "<div id='bodyInfo'> </br> id du lieu:"+idLieu+"</br> description: "+desc+"</br> Etat: "+etat+"</br>\n\
+                Type de service: "+typeDeService+"</br> Id compte Créateur:"+idCreateur+"<button type='button'>Sauvegarder</button><button onclick=ListerLesCommentaire("+idLieu+") type='button'>Commentaire</button><div>" 
             });
             // On ajoute des Listener sur le marqueur
             marker.addListener('mouseover',function(){
@@ -168,10 +182,11 @@
             marker.addListener('click',function(){
                 infoWindow.close(map,marker);
             });
-            }
+        }
         // Fonction qui initialise la map
         function initMap() {
             $( "#AjoutLieu" ).toggle();
+            $("#AfficherCommentaire").toggle();
             //La Carte est placé sur le div 'Map'
             var map = new google.maps.Map(document.getElementById('map'), {
                 zoom: 11,
@@ -181,7 +196,8 @@
                     style: google.maps.MapTypeControlStyle.DROPDOWN_MENU,
                     mapTypeIds: ['roadmap', 'terrain']
                 }
-            }); 
+            });
+            // Double-cliquez sur un point pour afficher le formulaire de création de lieu
             map.addListener('dblclick', function(event) {
                 ajouterLieu(event.latLng.lat(),event.latLng.lng());
             });
@@ -220,36 +236,29 @@
                 });
                 //ajuste la vue de la carte autour de la recherche
                 map.fitBounds(bounds);
-            });           
+            });
+            //ListerLieur();
             //Sous-Fonction AJax/jQuery
             //Elle va chercher la liste des lieux dans l'action 'ListeToiletteAjax'
-            //Elle recoit une chaine Json et place un marqueur dans sur la map
+            //Elle recoit une chaine Json et place un marqueur sur la map
             $.getJSON('ListeToilette.action?Action=ListeToiletteAjax',function(data,status){  
                 var nombreDeLieu = Object.keys(data).length;
                 for(i=0;i<nombreDeLieu;i++){
                     var positionToilette = {lng:data[i].Longitude,lat:data[i].Latitude};
-                    //if(data[i].Etat ===0){
-                        var icone = {
-                            url:"./Multimedia/toilette_prive_fermee.png",
-                            scaledSize: new google.maps.Size(55, 55)
-                        };
-                    //}
-                    placeMarker(positionToilette,map,icone,data[i].Id);
+                    var imageEtat =(data[i].Etat === 0?"public":"prive");
+                    var icone = {
+                        url:"./Multimedia/toilette_"+imageEtat+"_fermee.png",
+                        scaledSize: new google.maps.Size(60, 60)
+                    };
+                    placeMarker(positionToilette,map,icone,data[i].Id,data[i].Description,data[i].Etat,data[i].TypeDeService,data[i].CompteId);
                 }
             });
         }
-        function afficherLieu(){
-            $.getJSON('ListeToilette.action?Action=ListeToiletteAjax',function(data,status){  
-                var nombreDeLieu = Object.keys(data).length;
-                for(i=0;i<nombreDeLieu;i++){
-                    var positionToilette = {lng:data[i].Longitude,lat:data[i].Latitude };
-                    placeMarker(positionToilette,map,data[i].Id);
-                }
-            });
-        }
+
+      
         //Function de démarrage
         $( document ).ready(function() {
-            // On ajoute un evenement click sur les boutons de classe annuler pour afficher l'image
+            // On ajoute un evenement click sur les boutons de classe annuler
             $(".annuler").click(function(){
                 $("#AjoutLieu").toggle();
             });
@@ -270,8 +279,44 @@
                             +'&Latitude='+Latitude+'&Longitude='+Longitude+'&CompteId=1',function(data,status){
                     }); 
                     $("#AjoutLieu").toggle();
+                    $("#FormAjoutLieu")[0].reset();
                 }else {
                     alert("Veuillez remplir tous les champs !!");
+                }
+            });
+        }
+        
+        // FOnction Ajax Jquery
+        // Lorsque l'utilisateur clique sur le bouton commentaire dans la fenêtre d'un lieu,
+        // on affaiche tous les commentaire de ce lieu dans la zon de commentaire qui s'ouvre lors
+        // du clique.
+        function ListerLesCommentaire(idLieu){
+            // On efface tous les commentaires précédent
+            $("#ListeCommentaire").empty();
+            // On affiche la zone de commentaire avec une animation
+            $("#AfficherCommentaire").toggle();
+            $('html, body').animate({
+                scrollTop: $("#AfficherCommentaire").offset().top}, 2000);
+            // On va chercher tous les commentaire du Lieu qui vien d'être cliquer
+            $.getJSON('ListeCommentaire.action?Action=ListeCommentaireAjax&idLieu='+idLieu,function(dataCom,status){
+                var nombreDeLieu = Object.keys(dataCom).length;
+                // On fait une boucle d'affichage qui affiche tous les commentaires
+                for(i=0;i<nombreDeLieu;i++){
+                    var texteCommentaire = dataCom[i].Texte;
+                    // On va chercher le compte du créateur de chaque commentaire pour afficher son nom
+                    $.getJSON('GetCompte.action?Action=GetCompteAjax&idCompte='+dataCom[i].IdCompteCreateur,function(dataCpt,status){
+                            // Chaque commentaire est placé dans un panel qu'on affiche à l'écran
+                            var commentaireHtml =  "<div class='col-sm-4 col-lg-8 col-md-8'>"+
+                                            "<div class='panel panel-primary'>"+
+                                                "<div class='panel-heading'><span class='glyphicon glyphicon-user'></span><span> "+dataCpt.Prenom+" "+dataCpt.Nom+"</span></div>"+
+                                                "<div class='panel-body'>"+		
+                                                    "<p>"+texteCommentaire+"</p>";+
+                                                "</div>"+
+                                            "</div>"+
+                                        "</div>";
+                        // On ajoute le commentaire au DIV LiisteCommentaire
+                        $("#ListeCommentaire").append(commentaireHtml);
+                    });
                 }
             });
         }

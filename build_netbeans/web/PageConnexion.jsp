@@ -126,7 +126,7 @@
               
               <form class="login-form" action= "connection.action" method="post">
                 <span class="errorMessage"><c:out value="${requestScope.message}" /></span>
-                <input type ='hidden' name='Action' value="connexion" />
+                <input type ='hidden' name='Action' value="connection" />
                 <input  type="text" placeholder="Nom d'utilisateur" name="courriel"/>
                 <input type="password" placeholder="Mot de passe" name="mdp"/>
                 <button type='submit'>se connecter</button>

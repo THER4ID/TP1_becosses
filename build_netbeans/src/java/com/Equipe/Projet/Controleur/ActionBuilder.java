@@ -21,6 +21,10 @@ public class ActionBuilder {
                     return new CreerLieuAjaxAction();
                 case "connection":
                     return new LoginAction();
+                case"ListeCommentaireAjax":
+                    return new ListeCommentaireAjaxAction();
+                case "GetCompteAjax":
+                    return new GetCompteAjaxAction();
             }
         return new DefaultAction();
     }
