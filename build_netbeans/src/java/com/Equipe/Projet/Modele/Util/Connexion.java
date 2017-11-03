@@ -9,7 +9,7 @@ import java.sql.SQLException;
  */
 public class Connexion {
 	private static Connection cnx;
-	private static String 	url="jdbc:mysql://localhost/projetToilette?user=root&password=root",
+	private static String 	url="jdbc:mysql://localhost/projettoilette?user=root&password=root",
 				user = "root", password="root";
         
         private Connexion()

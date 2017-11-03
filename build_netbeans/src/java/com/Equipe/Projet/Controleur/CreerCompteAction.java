@@ -16,10 +16,7 @@ public class CreerCompteAction implements Action, RequestAware {
     private HttpServletRequest Request;
     private HttpServletResponse Response;
 
-    @Override
-    public String execute() {
-        return "/index.jsp";
-    }
+
 
     @Override
     public void setRequest(HttpServletRequest request) {
@@ -29,6 +26,18 @@ public class CreerCompteAction implements Action, RequestAware {
     @Override
     public void setResponse(HttpServletResponse response) {
         this.Response = response;
+    }
+    
+    @Override
+    public String execute() {
+        
+        String prenom = Request.getParameter("prenom");
+        String nom = Request.getParameter("nom");
+        String motdepasse = Request.getParameter("mdp");
+        
+        
+        
+        return "/PageConnexion.jsp";
     }
     
 }

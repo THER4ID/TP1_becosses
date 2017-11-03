@@ -5,6 +5,8 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -104,10 +106,29 @@
           </div>
           <ul class="nav navbar-nav">
             <li class="active"><a href="#">Accueil</a></li>
+            
             <li><a href="#">Favoris</a></li>
+            
+            
             <li><a href="#">Sauvegarder</a></li>
             <input id="pac-input" class="controls" type="text" placeholder="Search Box">
-            <li><a href="PageConnexion.jsp" class="connection">Se Connecter</a>
+            <li>
+                
+                <a class="connection"
+                
+                    <c:set var="valueconnexion" value="" />
+                    <c:choose>
+                        <c:when test="${!empty sessionScope.IdConnect}">
+                            href="deconnexion.action?Action=deconnexion"> Se Deconnecter
+                        </c:when>
+                        <c:otherwise>
+                            href="PageConnexion.jsp">Se Connecter
+                        </c:otherwise>
+                    </c:choose>
+                    
+                
+                </a>
+                
             </li>
           
             
