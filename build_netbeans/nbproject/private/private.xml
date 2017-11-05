@@ -12,11 +12,14 @@
     </editor-bookmarks>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/F:/travaux/programmation/Java/Java%20EE/TP1/TP1_becosses/build_netbeans/src/java/com/Equipe/Projet/Controleur/CreerCompteAction.java</file>
-            <file>file:/F:/travaux/programmation/Java/Java%20EE/TP1/TP1_becosses/build_netbeans/web/CreerCompte.jsp</file>
-            <file>file:/F:/travaux/programmation/Java/Java%20EE/TP1/TP1_becosses/build_netbeans/web/index.jsp</file>
-            <file>file:/F:/travaux/programmation/Java/Java%20EE/TP1/TP1_becosses/build_netbeans/src/java/com/Equipe/Projet/Controleur/ActionDeconnexion.java</file>
-            <file>file:/F:/travaux/programmation/Java/Java%20EE/TP1/TP1_becosses/build_netbeans/src/java/com/Equipe/Projet/Controleur/LoginAction.java</file>
+            <file>file:/I:/travaux/programmation/Java/Java%20EE/TP1/TP1_becosses/build_netbeans/src/java/com/Equipe/Projet/Modele/DAO/ToiletteDAO.java</file>
+            <file>file:/I:/travaux/programmation/Java/Java%20EE/TP1/TP1_becosses/build_netbeans/src/java/com/Equipe/Projet/Controleur/ActionBuilder.java</file>
+            <file>file:/I:/travaux/programmation/Java/Java%20EE/TP1/TP1_becosses/build_netbeans/src/java/com/Equipe/Projet/Controleur/ControleurFrontal.java</file>
+            <file>file:/I:/travaux/programmation/Java/Java%20EE/TP1/TP1_becosses/build_netbeans/src/java/com/Equipe/Projet/Controleur/GetLieuxAjax.java</file>
+            <file>file:/I:/travaux/programmation/Java/Java%20EE/TP1/TP1_becosses/build_netbeans/src/java/com/Equipe/Projet/Controleur/CreerLieuAjaxAction.java</file>
+            <file>file:/I:/travaux/programmation/Java/Java%20EE/TP1/TP1_becosses/build_netbeans/src/java/com/Equipe/Projet/Controleur/CreerCompteAction.java</file>
+            <file>file:/I:/travaux/programmation/Java/Java%20EE/TP1/TP1_becosses/build_netbeans/src/java/com/Equipe/Projet/Controleur/GetCompteAjaxAction.java</file>
+            <file>file:/I:/travaux/programmation/Java/Java%20EE/TP1/TP1_becosses/build_netbeans/web/index.jsp</file>
         </group>
     </open-files>
 </project-private>
