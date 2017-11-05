@@ -137,55 +137,54 @@
         </div>     
     </nav>
         <div id="map"></div>
-        
-        <div class="container-fluid" id="AjoutLieu">
-            <form id ="FormAjoutLieu">
-                <h3>Ajout d'une nouvelle Toilette</h3>
-                <div class="form-group">
-                  <label>Description:</label>
-                  <textarea class="form-control" rows="5" id="description"></textarea>
-                </div>
-                <div class="form-group">
-                  <label>État</label>
-                  <select class="form-control" id="etat">
-                    <option value = "0">Public</option>
-                    <option value = "1">Privé</option>
-                  </select>
-                </div>
-                <div class="form-group">
-                    <label class="radio-inline">
-                        <input type="radio" name="radioTypeDeService" Value="0">Homme
-                    </label>
-                    <label class="radio-inline">
-                          <input type="radio" name="radioTypeDeService" Value="1">Femme
-                    </label>
-                    <label class="radio-inline">
-                          <input type="radio" name="radioTypeDeService" Value="2">Homme et Femme
-                    </label>
-                </div>
-                <button type="button" id="boutonCreerLieu" class="btn btn-success">Créer</button>
-                <button type="button" class="btn btn-success annuler">Annuler</button> 
-            </form>
-        </div>
-        <div class="container-fluid" id="AfficherCommentaire">
-            <h3>Zone Commentaire de la Toilette</h3>
-            <div id='ListeCommentaire'>
+            <div class="container-fluid" id="AjoutLieu">
+                <form id ="FormAjoutLieu">
+                    <h3>Ajout d'une nouvelle Toilette</h3>
+                    <div class="form-group">
+                      <label>Description:</label>
+                      <textarea class="form-control" rows="5" id="description"></textarea>
+                    </div>
+                    <div class="form-group">
+                      <label>État</label>
+                      <select class="form-control" id="etat">
+                        <option value = "0">Public</option>
+                        <option value = "1">Privé</option>
+                      </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="radio-inline">
+                            <input type="radio" name="radioTypeDeService" Value="0">Homme
+                        </label>
+                        <label class="radio-inline">
+                              <input type="radio" name="radioTypeDeService" Value="1">Femme
+                        </label>
+                        <label class="radio-inline">
+                              <input type="radio" name="radioTypeDeService" Value="2">Homme et Femme
+                        </label>
+                    </div>
+                    <button type="button" id="boutonCreerLieu" class="btn btn-success">Créer</button>
+                    <button type="button" class="btn btn-success annuler">Annuler</button> 
+                </form>
             </div>
-            <c:choose>
-                <c:when test="${!empty sessionScope.IdConnect}">
-            <div id='Commenter'>
-                <div class='col-sm-4 col-lg-8 col-md-8'>
-                    <form>
-                        <h4>Votre commentaire : </h4>
-                        <textarea class="form-control" rows="5" id="TexteCommentaire"></textarea>
-                        <input type ='hidden' name='IdCompte' value="${sessionScope.IdConnect}" />
-                        <span><button type="button" id="boutonCreerCommentaire" onclick="Commenter(${sessionScope.IdConnect})" class="btn btn-success">Envoyez</button></span>
-                    </form>
+            <div class="container-fluid" id="AfficherCommentaire">
+                <h3>Zone Commentaire de la Toilette</h3>
+                <div id='ListeCommentaire'>
                 </div>
+                <c:choose>
+                    <c:when test="${!empty sessionScope.IdConnect}">
+                <div id='Commenter'>
+                    <div class='col-sm-4 col-lg-8 col-md-8'>
+                        <form id="FormCommentaire">
+                            <h4>Votre commentaire : </h4>
+                            <textarea class="form-control" rows="5" id="TexteCommentaire"></textarea>
+                            <input type ='hidden' id='IdCompte' value="${sessionScope.IdConnect}" />
+                            <span><button type="button" id="boutonCreerCommentaire" class="btn btn-success">Envoyez</button></span>
+                        </form>
+                    </div>
+                </div>
+                    </c:when>
+                </c:choose>
             </div>
-                </c:when>
-            </c:choose>
-        </div>
       <script>           
         //Fonction de placemements de marqueurs
         //Cette Fonction est appelé pour placer des Lieu sur la map
@@ -202,11 +201,8 @@
                 Type de service: "+typeDeService+"</br> Id compte Créateur:"+idCreateur+"<button type='button'>Sauvegarder</button><button onclick=ListerLesCommentaire("+idLieu+") type='button'>Commentaire</button><div>" 
             });
             // On ajoute des Listener sur le marqueur
-            marker.addListener('mouseover',function(){
-                infoWindow.open(map,marker);
-            });
             marker.addListener('click',function(){
-                infoWindow.close(map,marker);
+                infoWindow.open(map,marker);
             });
         }
         // Fonction qui initialise la map
@@ -287,6 +283,13 @@
             // On ajoute un evenement click sur les boutons de classe annuler
             $(".annuler").click(function(){
                 $("#AjoutLieu").toggle();
+                $("#ListeCommentaire").empty();
+
+            });
+            $("#map").mouseenter(function(){
+                $("#AjoutLieu").hide();
+                $("#AfficherCommentaire").hide();
+                $("#ListeCommentaire").empty();
             });
         });
         // Fonction qui ajoute un lieu à la map
@@ -325,40 +328,45 @@
                 scrollTop: $("#AfficherCommentaire").offset().top}, 2000);
             // On va chercher tous les commentaire du Lieu qui vien d'être cliquer
             $.getJSON('ListeCommentaire.action?Action=ListeCommentaireAjax&idLieu='+idLieu,function(dataCom,status){
-                var nombreDeLieu = Object.keys(dataCom).length;
-                // On fait une boucle d'affichage qui affiche tous les commentaires
-                for(i=0;i<nombreDeLieu;i++){
-                    var texteCommentaire = dataCom[i].Texte;
-                    // On va chercher le compte du créateur de chaque commentaire pour afficher son nom
-                    $.getJSON('GetCompte.action?Action=GetCompteAjax&idCompte='+dataCom[i].IdCompteCreateur,function(dataCpt,status){
-                            // Chaque commentaire est placé dans un panel qu'on affiche à l'écran
-                            var commentaireHtml =  "<div class='col-sm-4 col-lg-8 col-md-8'>"+
-                                            "<div class='panel panel-primary'>"+
-                                                "<div class='panel-heading'><span class='glyphicon glyphicon-user'></span><span> "+dataCpt.Prenom+" "+dataCpt.Nom+"</span></div>"+
-                                                "<div class='panel-body'>"+		
-                                                    "<p>"+texteCommentaire+"</p>";+
-                                                "</div>"+
-                                            "</div>"+
-                                        "</div>";
-                        // On ajoute le commentaire au DIV ListeCommentaire
-                        $("#ListeCommentaire").append(commentaireHtml);
-                    });
+                var nombreDeLieu = Object.keys(dataCom).length;         
+                if(nombreDeLieu > 0){
+                    // On fait une boucle d'affichage qui affiche tous les commentaires
+                    for(i=0;i<nombreDeLieu;i++){
+                        var texteCommentaire = dataCom[i].Texte;
+                         NouveauCommentaire(texteCommentaire,dataCom[i].IdCompteCreateur);
+                    }
+                }else{
+                    $("#ListeCommentaire").append("Aucun Commentaire pour ce lieu.");
                 }
             });
             $("#boutonCreerCommentaire").click(function() {
-                alert( "Handler for .click() called." );
+                var IdCompteConnecte = $("#IdCompte").val();
+                var leCommentaire = $.trim($("#TexteCommentaire").val());
+                if (leCommentaire) {
+                    $.getJSON('CommenterUnLieu.action?Action=CommenterUnLieuAjax&IdCompteConnecte='+IdCompteConnecte+'&IdLieu='+idLieu+'&TexteCommentaire='+leCommentaire,function(data,status){});
+                    $("#FormCommentaire")[0].reset();
+                    NouveauCommentaire(leCommentaire,IdCompteConnecte);
+                                    
+
+                }
             });
         }
         
-        
-        function Commenter(idConnection){
-            if ($.trim($("#TexteCommentaire").val())) {
-                alert(idConnection);
-            }
-                
+        function NouveauCommentaire(TexteCommentaire,IdCompte){
+            $.getJSON('GetCompte.action?Action=GetCompteAjax&idCompte='+IdCompte,function(dataCpt,status){
+                // Chaque commentaire est placé dans un panel qu'on affiche à l'écran
+                var commentaireHtml =   "<div class='col-sm-4 col-lg-8 col-md-8'>"+
+                                            "<div class='panel panel-primary'>"+
+                                                "<div class='panel-heading'><span class='glyphicon glyphicon-user'></span><span> "+dataCpt.Prenom+" "+dataCpt.Nom+"</span></div>"+
+                                                "<div class='panel-body'>"+		
+                                                    "<p>"+TexteCommentaire+"</p>";+
+                                                "</div>"+
+                                             "</div>"+
+                                        "</div>";
+                            // On ajoute le commentaire au DIV ListeCommentaire
+               $("#ListeCommentaire").append(commentaireHtml);
+            });  
         }
-        
-    
         //ajout d'un marqueur avec un click
         
     </script>

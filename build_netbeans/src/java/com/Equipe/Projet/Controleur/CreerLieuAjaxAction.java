@@ -37,18 +37,15 @@ public class CreerLieuAjaxAction implements AjaxAction, RequestAware, Action  {
             Connection cnx;
             cnx = Connexion.getInstance();
             ToiletteDAO daoToilette = new ToiletteDAO(cnx);
-            daoToilette.create(tempToilette);
-            valider = "true";
-            Response.getWriter().write(valider);
-        } catch (ClassNotFoundException | IOException ex) {
+            if(daoToilette.create(tempToilette)){
+                return "True";
+            }else {
+                return "False";
+            }
+        } catch (ClassNotFoundException ex) {
             Logger.getLogger(CreerLieuAjaxAction.class.getName()).log(Level.SEVERE, null, ex);         
         }
-        try {
-            Response.getWriter().write(valider);
-        } catch (IOException ex) {
-            Logger.getLogger(CreerLieuAjaxAction.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return valider;
+        return "False";
     }
     @Override
     public void setRequest(HttpServletRequest r) {

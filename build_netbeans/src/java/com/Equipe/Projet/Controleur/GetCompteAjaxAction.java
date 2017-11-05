@@ -32,20 +32,19 @@ public class GetCompteAjaxAction implements AjaxAction, RequestAware, Action  {
         // On va chercher l'id du lieu commenté 
         int idCompte = Integer.parseInt(Request.getParameter("idCompte"));
         Compte cpt = new Compte();
+        String json = "[]";
         try {
             Class.forName("com.mysql.jdbc.Driver");
             Connection cnx;
             cnx = Connexion.getInstance();
             CompteDAO daoCompte = new CompteDAO(cnx);
             cpt = daoCompte.FindById(idCompte);
-            String json = new Gson().toJson(cpt);
-            System.out.println("YIOOOOOOOOOOOOOOOOO"+json);
-            Response.getWriter().write(json);
-            return "True";
-        } catch (ClassNotFoundException | IOException ex) {
+            json = new Gson().toJson(cpt);
+            return json;
+        } catch (ClassNotFoundException ex) {
             Logger.getLogger(ListeCommentaireAjaxAction.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return "False";
+        return json;
     }
     @Override
     public void setRequest(HttpServletRequest r) {

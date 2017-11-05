@@ -24,8 +24,8 @@ public class CommenterUnLieuAjaxAction implements AjaxAction, RequestAware, Acti
     @Override
     public String execute() {
         Commentaire comm = new Commentaire();
-        comm.setIdCompteCreateur(Integer.parseInt(Request.getParameter("idCompteConnecte")));
-        comm.setIdLieuCommenter(Integer.parseInt(Request.getParameter("idLieu")));
+        comm.setIdCompteCreateur(Integer.parseInt(Request.getParameter("IdCompteConnecte")));
+        comm.setIdLieuCommenter(Integer.parseInt(Request.getParameter("IdLieu")));
         comm.setTexte(Request.getParameter("TexteCommentaire"));
         try {
             Class.forName("com.mysql.jdbc.Driver");

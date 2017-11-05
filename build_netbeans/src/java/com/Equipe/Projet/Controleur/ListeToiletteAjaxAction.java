@@ -38,14 +38,8 @@ public class ListeToiletteAjaxAction implements AjaxAction, RequestAware, Action
             liste = daoToilette.findAll();
             json = new Gson().toJson(liste);
             System.out.println("Je suis ici");           
-            Response.getWriter().write(json);
             return json;
-        } catch (ClassNotFoundException | IOException ex) {
-            Logger.getLogger(ListeToiletteAjaxAction.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        try {
-            Response.getWriter().write(json);
-        } catch (IOException ex) {
+        } catch (ClassNotFoundException ex) {
             Logger.getLogger(ListeToiletteAjaxAction.class.getName()).log(Level.SEVERE, null, ex);
         }
         return json;
