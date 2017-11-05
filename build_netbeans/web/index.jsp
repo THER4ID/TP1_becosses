@@ -178,6 +178,7 @@
                     <form>
                         <h4>Votre commentaire : </h4>
                         <textarea class="form-control" rows="5" id="TexteCommentaire"></textarea>
+                        <input type ='hidden' name='IdCompte' value="${sessionScope.IdConnect}" />
                         <span><button type="button" id="boutonCreerCommentaire" onclick="Commenter(${sessionScope.IdConnect})" class="btn btn-success">Envoyez</button></span>
                     </form>
                 </div>
@@ -343,6 +344,9 @@
                         $("#ListeCommentaire").append(commentaireHtml);
                     });
                 }
+            });
+            $("#boutonCreerCommentaire").click(function() {
+                alert( "Handler for .click() called." );
             });
         }
         
