@@ -56,7 +56,38 @@ public class ToiletteDAO extends DAO<Toilette> {
 		return false;
     }
     
-
+    public List<Toilette> findToiletteByCompte(int id) throws SQLException{
+        
+        List<Toilette> liste = new LinkedList<>();
+        
+        
+        
+        try{
+            Statement stm = cnx.createStatement(); 
+            ResultSet r = stm.executeQuery("SELECT * FROM toilette WHERE IdCompte'"+id+"'");
+            
+            while(r.next())
+            {
+                Toilette t = new Toilette();
+                t.setId(r.getInt("IdToilette"));
+                t.setCompteId(r.getInt("IdCompte"));
+                t.setLongitude(r.getDouble("Longitude"));
+                t.setLatitude(r.getDouble("Latitude"));
+                t.setDescription(r.getString("Description"));
+                t.setEtat(Integer.parseInt(r.getString("Etat")));
+                t.setTypeDeService(Integer.parseInt(r.getString("TypeDeService")));
+                liste.add(t);        
+            }
+            r.close();
+            stm.close();
+        }
+        catch(SQLException e){
+        
+        
+        }
+        
+        return liste;
+    }
     @Override
     public Toilette read(int id) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
