@@ -2,6 +2,7 @@ package com.Equipe.Projet.Modele.DAO;
 
 import com.Equipe.Projet.Modele.Classes.Compte;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -21,14 +22,18 @@ public class CompteDAO extends DAO<Compte> {
     @Override
     public boolean create(Compte x) {
         		String req = "INSERT INTO compte (`COURRIEL` , `MOTDEPASSE` , `AGE`,`VILLE`, `NOM` , `PRENOM` ) "+
-			     "VALUES ('"+x.getCourriel()+"','"+x.getMotDePasse()+"','"+x.getAge()+"','"+x.getVille()+"','"+
-                             x.getNom()+"','"+x.getPrenom()+"')";
-		//System.out.println("REQUETE "+req);
-		Statement stm = null;
+			     "VALUES (?,?,?,?,?,?)";
+		PreparedStatement stm = null;
 		try 
 		{
-			stm = cnx.createStatement(); 
-			int n= stm.executeUpdate(req);
+			stm = cnx.prepareStatement(req);
+                        stm.setString(1,x.getCourriel());
+                        stm.setString(2,x.getMotDePasse());
+                        stm.setInt(3,x.getAge());
+                        stm.setString(4,x.getVille());
+                        stm.setString(5,x.getNom());
+                        stm.setString(6,x.getPrenom());
+			int n= stm.executeUpdate();
 			if (n>0)
 			{
 				stm.close();
@@ -54,14 +59,15 @@ public class CompteDAO extends DAO<Compte> {
     
     
     public Compte FindByCourriel(String courriel) {
-        Statement stm = null;
+        PreparedStatement stm = null;
         ResultSet r = null;
         
         try
         {
-
-            stm = cnx.createStatement();
-            r = stm.executeQuery("SELECT * FROM compte WHERE Courriel = '"+courriel+"'");
+            String req ="SELECT * FROM compte WHERE Courriel =?";
+            stm = cnx.prepareStatement(req);
+            stm.setString(1,courriel);
+            r = stm.executeQuery();
             if(r.next())
             {
                 Compte c = new Compte();
@@ -101,13 +107,15 @@ public class CompteDAO extends DAO<Compte> {
     
     
         public Compte FindById(int id) {
-        Statement stm = null;
+        PreparedStatement stm = null;
         ResultSet r = null;
         
         try
         {
-            stm = cnx.createStatement();
-            r = stm.executeQuery("SELECT * FROM compte WHERE IdCompte = '"+id+"'");
+            String req ="SELECT * FROM compte WHERE IdCompte =?";
+            stm = cnx.prepareStatement(req);
+            stm.setInt(1,id);
+            r = stm.executeQuery();
             if(r.next())
             {
                 Compte c = new Compte();

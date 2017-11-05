@@ -198,7 +198,6 @@
                 <button type="button" class="btn btn-success annuler">Annuler</button> 
             </form>
         </div>
-
             <div class="container-fluid" id="AfficherCommentaire">
                 <h3>Zone Commentaire de la Toilette</h3>
                 <div id='ListeCommentaire'>
@@ -374,9 +373,7 @@
                 }
             });
         }
-        
-        
-        
+                
         // FOnction Ajax Jquery
         // Lorsque l'utilisateur clique sur le bouton commentaire dans la fenêtre d'un lieu,
         // on affaiche tous les commentaire de ce lieu dans la zon de commentaire qui s'ouvre lors

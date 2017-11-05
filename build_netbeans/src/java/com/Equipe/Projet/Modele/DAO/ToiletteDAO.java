@@ -7,6 +7,7 @@ package com.Equipe.Projet.Modele.DAO;
 
 import com.Equipe.Projet.Modele.Classes.Toilette;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -26,14 +27,19 @@ public class ToiletteDAO extends DAO<Toilette> {
     @Override
     public boolean create(Toilette t) {
         String req = "INSERT INTO toilette (`IDCOMPTE` , `LONGITUDE` , `LATITUDE`,`DESCRIPTION`, `ETAT` , `TYPEDESERVICE` ) "+
-			     "VALUES ('"+t.getCompteId()+"','"+t.getLongitude()+"','"+t.getLatitude()+"','"+t.getDescription()+"','"+
-                             t.getEtat()+"','"+t.getTypeDeService()+"')";
+			     "VALUES (?,?,?,?,?,?)";
 		//System.out.println("REQUETE "+req);
-		Statement stm = null;
+		PreparedStatement stm = null;
 		try 
 		{
-			stm = cnx.createStatement(); 
-			int n= stm.executeUpdate(req);
+			stm = cnx.prepareStatement(req);
+                        stm.setInt(1,t.getCompteId());
+                        stm.setDouble(2,t.getLongitude());
+                        stm.setDouble(3,t.getLatitude());
+                        stm.setString(4,t.getDescription());
+                        stm.setInt(5,t.getEtat());
+                        stm.setInt(6,t.getTypeDeService());
+			int n= stm.executeUpdate();
 			if (n>0)
 			{
 				stm.close();
@@ -59,13 +65,12 @@ public class ToiletteDAO extends DAO<Toilette> {
     public List<Toilette> findToiletteByCompte(int id) throws SQLException{
         
         List<Toilette> liste = new LinkedList<>();
-        
-        
-        
         try{
-            Statement stm = cnx.createStatement(); 
-            ResultSet r = stm.executeQuery("SELECT * FROM toilette WHERE IdCompte'"+id+"'");
-            
+            PreparedStatement stm = null;
+            String req = "SELECT * FROM toilette WHERE IdCompte=?";
+            stm = cnx.prepareStatement(req);
+            stm.setInt(1, id);
+            ResultSet r = stm.executeQuery();           
             while(r.next())
             {
                 Toilette t = new Toilette();

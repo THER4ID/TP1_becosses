@@ -9,6 +9,7 @@ import com.Equipe.Projet.Modele.Classes.Commentaire;
 import com.Equipe.Projet.Modele.Classes.Compte;
 import com.Equipe.Projet.Modele.Classes.Toilette;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -28,12 +29,15 @@ public class CommentaireDAO extends DAO<Commentaire> {
     @Override
     public boolean create(Commentaire c) {
         String req = "INSERT INTO commentaire (`IDCOMPTE` , `IDTOILETTE` , `TEXTE`) "+
-			     "VALUES ('"+c.getIdCompteCreateur()+"','"+c.getIdLieuCommenter()+"','"+c.getTexte()+"')";
-		Statement stm = null;
+			     "VALUES (?,?,?)";
+		PreparedStatement stm = null;
 		try 
 		{
-			stm = cnx.createStatement(); 
-			int n= stm.executeUpdate(req);
+			stm = cnx.prepareStatement(req);
+                        stm.setInt(1,c.getIdCompteCreateur());
+                        stm.setInt(2,c.getIdLieuCommenter());
+                        stm.setString(3,c.getTexte());
+			int n = stm.executeUpdate();
 			if (n>0)
 			{
 				stm.close();
@@ -59,8 +63,11 @@ public class CommentaireDAO extends DAO<Commentaire> {
 		List<Commentaire> liste = new LinkedList<>();
 		try 
 		{
-			Statement stmCommentaire = cnx.createStatement();                       
-			ResultSet resCommentaire = stmCommentaire.executeQuery("SELECT * FROM commentaire WHERE IdToilette ='"+idLieu+"'");
+                        PreparedStatement stmCommentaire = null;
+                        String req = "SELECT * FROM commentaire WHERE IdToilette =?";
+			stmCommentaire = cnx.prepareStatement(req);
+                        stmCommentaire.setInt(1, idLieu);
+			ResultSet resCommentaire = stmCommentaire.executeQuery();
 
 			while (resCommentaire.next())
 			{
