@@ -94,7 +94,12 @@
             }
             #FormAjoutLieu, #AfficherCommentaire{ 
                 margin: 220px 50px 75px 50px;
-            }           
+            }
+            td /* Toutes les cellules des tableaux... */
+            {
+                border: 2px solid black; /* auront une bordure de 1px */
+            }
+
         </style>
     </head>
   <body>
@@ -107,10 +112,23 @@
           <ul class="nav navbar-nav">
             <li class="active"><a href="#">Accueil</a></li>
             
-            <li><a href="#">Favoris</a></li>
+            <li>
+                <a class="mes_lieux" 
+                    <c:set var="valueconnexion" value="" />
+                    <c:choose>
+                        <c:when test="${!empty sessionScope.IdConnect}">
+                            >Mes lieux
+                        </c:when>
+                        <c:otherwise>
+                            >
+                        </c:otherwise>
+                    </c:choose>
+                </a>
+            
+            </li>
             
             
-            <li><a href="#">Sauvegarder</a></li>
+            <li><a href="#"></a></li>
             <input id="pac-input" class="controls" type="text" placeholder="Search Box">
             <li>
                 
@@ -136,36 +154,51 @@
     
         </div>     
     </nav>
-        <div id="map"></div>
-            <div class="container-fluid" id="AjoutLieu">
-                <form id ="FormAjoutLieu">
-                    <h3>Ajout d'une nouvelle Toilette</h3>
-                    <div class="form-group">
-                      <label>Description:</label>
-                      <textarea class="form-control" rows="5" id="description"></textarea>
-                    </div>
-                    <div class="form-group">
-                      <label>État</label>
-                      <select class="form-control" id="etat">
-                        <option value = "0">Public</option>
-                        <option value = "1">Privé</option>
-                      </select>
-                    </div>
-                    <div class="form-group">
-                        <label class="radio-inline">
-                            <input type="radio" name="radioTypeDeService" Value="0">Homme
-                        </label>
-                        <label class="radio-inline">
-                              <input type="radio" name="radioTypeDeService" Value="1">Femme
-                        </label>
-                        <label class="radio-inline">
-                              <input type="radio" name="radioTypeDeService" Value="2">Homme et Femme
-                        </label>
-                    </div>
-                    <button type="button" id="boutonCreerLieu" class="btn btn-success">Créer</button>
-                    <button type="button" class="btn btn-success annuler">Annuler</button> 
-                </form>
-            </div>
+       <div id="map"></div>
+        <div class="container-fluid" id="MesLieux">
+            <form id="FormMesLieux">
+                 <label>Description:</label>
+                 <table id="table_lieux">
+                     <tr>
+                         <td>Latitude</td>
+                         <td>Longitude</td>
+                         <td>type de lieux</td>
+                         <td>Disponibilite</td>
+                     </tr>
+                 </table>
+            </form>            
+        </div>
+        
+        <div class="container-fluid" id="AjoutLieu">
+            <form id ="FormAjoutLieu">
+                <h3>Ajout d'une nouvelle Toilette</h3>
+                <div class="form-group">
+                  <label>Description:</label>
+                  <textarea class="form-control" rows="5" id="description"></textarea>
+                </div>
+                <div class="form-group">
+                  <label>État</label>
+                  <select class="form-control" id="etat">
+                    <option value = "0">Public</option>
+                    <option value = "1">Privé</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                    <label class="radio-inline">
+                        <input type="radio" name="radioTypeDeService" Value="0">Homme
+                    </label>
+                    <label class="radio-inline">
+                          <input type="radio" name="radioTypeDeService" Value="1">Femme
+                    </label>
+                    <label class="radio-inline">
+                          <input type="radio" name="radioTypeDeService" Value="2">Homme et Femme
+                    </label>
+                </div>
+                <button type="button" id="boutonCreerLieu" class="btn btn-success">Créer</button>
+                <button type="button" class="btn btn-success annuler">Annuler</button> 
+            </form>
+        </div>
+
             <div class="container-fluid" id="AfficherCommentaire">
                 <h3>Zone Commentaire de la Toilette</h3>
                 <div id='ListeCommentaire'>
@@ -194,11 +227,38 @@
                 map: map,
                 animation: google.maps.Animation.DROP,  
                 icon: icone
-            });            
+            });
+            
+            //variable modif
+            var tds_modif;
+            var etat_modif;
+            
+            //modification du type de service de int en string
+            if(typeDeService === 0){
+                tds_modif = "Hommes";
+            }
+            else if(typeDeService === 1){
+                tds_modif = "Femmes";
+            }
+            else if(typeDeService === 2){
+                tds_modif = "Hommes et Femmes";
+            }
+            
+            //modification de l'etat de int en string
+            if(etat === 0){
+                etat_modif = "Public";
+            }
+            
+            else if(etat === 1){
+                etat_modif = "Privé";
+            }
+
+            
             //On lui ajoute une fenetre de details
             var infoWindow = new google.maps.InfoWindow({
-                content: "<div id='bodyInfo'> </br> id du lieu:"+idLieu+"</br> description: "+desc+"</br> Etat: "+etat+"</br>\n\
-                Type de service: "+typeDeService+"</br> Id compte Créateur:"+idCreateur+"<button type='button'>Sauvegarder</button><button onclick=ListerLesCommentaire("+idLieu+") type='button'>Commentaire</button><div>" 
+                maxWidth: 520,
+                content: "<div id='bodyInfo'> </br> id du lieu:"+idLieu+"</br> description: "+desc+"</br> Etat: "+etat_modif+"</br>\n\
+                Type de service: "+tds_modif+"</br> Id compte Créateur:"+idCreateur+"</br><button type='button'>Sauvegarder</button><button onclick=ListerLesCommentaire("+idLieu+") type='button'>Commentaire</button><div>" 
             });
             // On ajoute des Listener sur le marqueur
             marker.addListener('click',function(){
@@ -314,6 +374,8 @@
                 }
             });
         }
+        
+        
         
         // FOnction Ajax Jquery
         // Lorsque l'utilisateur clique sur le bouton commentaire dans la fenêtre d'un lieu,
