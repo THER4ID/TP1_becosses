@@ -280,7 +280,12 @@
             });
             // Double-cliquez sur un point pour afficher le formulaire de création de lieu
             map.addListener('dblclick', function(event) {
-                ajouterLieu(event.latLng.lat(),event.latLng.lng());
+                if($.trim($("a.connection").html())==="Se Deconnecter"){
+                    ajouterLieu(event.latLng.lat(),event.latLng.lng());
+                } else{
+                    alert("Vous devez être connecté pour créer un lieu")
+                }
+                
             });
             
             //Ajout d'une barre de recherche
@@ -318,7 +323,6 @@
                 //ajuste la vue de la carte autour de la recherche
                 map.fitBounds(bounds);
             });
-            //ListerLieur();
             //Sous-Fonction AJax/jQuery
             //Elle va chercher la liste des lieux dans l'action 'ListeToiletteAjax'
             //Elle recoit une chaine Json et place un marqueur sur la map
@@ -335,7 +339,6 @@
                 }
             });
         }
-
       
         //Function de démarrage
         $( document ).ready(function() {
