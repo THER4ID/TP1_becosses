@@ -171,15 +171,19 @@
             <h3>Zone Commentaire de la Toilette</h3>
             <div id='ListeCommentaire'>
             </div>
+            <c:choose>
+                <c:when test="${!empty sessionScope.IdConnect}">
             <div id='Commenter'>
                 <div class='col-sm-4 col-lg-8 col-md-8'>
                     <form>
-                        <h4>Commentez : </h4>
-                        <textarea class="form-control" rows="5" id="description"></textarea>
-                        <span><button type="button" id="boutonCreerCommentaire" class="btn btn-success">Envoyez</button></span>
+                        <h4>Votre commentaire : </h4>
+                        <textarea class="form-control" rows="5" id="TexteCommentaire"></textarea>
+                        <span><button type="button" id="boutonCreerCommentaire" onclick="Commenter(${sessionScope.IdConnect})" class="btn btn-success">Envoyez</button></span>
                     </form>
                 </div>
             </div>
+                </c:when>
+            </c:choose>
         </div>
       <script>           
         //Fonction de placemements de marqueurs
@@ -335,11 +339,19 @@
                                                 "</div>"+
                                             "</div>"+
                                         "</div>";
-                        // On ajoute le commentaire au DIV LiisteCommentaire
+                        // On ajoute le commentaire au DIV ListeCommentaire
                         $("#ListeCommentaire").append(commentaireHtml);
                     });
                 }
             });
+        }
+        
+        
+        function Commenter(idConnection){
+            if ($.trim($("#TexteCommentaire").val())) {
+                alert(idConnection);
+            }
+                
         }
         
     
