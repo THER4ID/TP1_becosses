@@ -32,19 +32,19 @@ public class ListeCommentaireAjaxAction implements AjaxAction, RequestAware, Act
         // On va chercher l'id du lieu commenté 
         int idLieu = Integer.parseInt(Request.getParameter("idLieu"));
         List<Commentaire> liste = new LinkedList<>();
+        String json = "[]";
         try {
             Class.forName("com.mysql.jdbc.Driver");
             Connection cnx;
             cnx = Connexion.getInstance();
             CommentaireDAO daoCommentaire = new CommentaireDAO(cnx);
             liste = daoCommentaire.FindByIdDeLieu(idLieu);
-            String json = new Gson().toJson(liste);
-            Response.getWriter().write(json);
-            return "True";
-        } catch (ClassNotFoundException | IOException ex) {
+            json = new Gson().toJson(liste);
+            return json;
+        } catch (ClassNotFoundException ex) {
             Logger.getLogger(ListeCommentaireAjaxAction.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return "False";
+        return json;
     }
     @Override
     public void setRequest(HttpServletRequest r) {

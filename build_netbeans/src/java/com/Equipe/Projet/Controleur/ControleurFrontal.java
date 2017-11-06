@@ -46,6 +46,7 @@ public class ControleurFrontal extends HttpServlet {
                 if(!(action instanceof AjaxAction)){
                     this.getServletContext().getRequestDispatcher(vue).forward(request, response);
                 }
+                response.getWriter().write(vue);
 
 
     }

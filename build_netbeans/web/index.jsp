@@ -242,9 +242,8 @@
     
         </div>     
     </nav>
-        
-        <div id="map"></div>
-        
+
+       <div id="map"></div>
         <div class="container-fluid" id="MesLieux">
             <form id="FormMesLieux">
                 
@@ -289,20 +288,25 @@
                 <button type="button" class="btn btn-success annuler">Annuler</button> 
             </form>
         </div>
-        <div class="container-fluid" id="AfficherCommentaire">
-            <h3>Zone Commentaire de la Toilette</h3>
-            <div id='ListeCommentaire'>
-            </div>
-            <div id='Commenter'>
-                <div class='col-sm-4 col-lg-8 col-md-8'>
-                    <form>
-                        <h4>Commentez : </h4>
-                        <textarea class="form-control" rows="5" id="description"></textarea>
-                        <span><button type="button" id="boutonCreerCommentaire" class="btn btn-success">Envoyez</button></span>
-                    </form>
+            <div class="container-fluid" id="AfficherCommentaire">
+                <h3>Zone Commentaire de la Toilette</h3>
+                <div id='ListeCommentaire'>
                 </div>
+                <c:choose>
+                    <c:when test="${!empty sessionScope.IdConnect}">
+                <div id='Commenter'>
+                    <div class='col-sm-4 col-lg-8 col-md-8'>
+                        <form id="FormCommentaire">
+                            <h4>Votre commentaire : </h4>
+                            <textarea class="form-control" rows="5" id="TexteCommentaire"></textarea>
+                            <input type ='hidden' id='IdCompte' value="${sessionScope.IdConnect}" />
+                            <span><button type="button" id="boutonCreerCommentaire" class="btn btn-success">Envoyez</button></span>
+                        </form>
+                    </div>
+                </div>
+                    </c:when>
+                </c:choose>
             </div>
-        </div>
       <script>           
         //Fonction de placemements de marqueurs
         //Cette Fonction est appelé pour placer des Lieu sur la map
@@ -373,10 +377,11 @@
             });
  
             // On ajoute des Listener sur le marqueur
-            
+   
             google.maps.event.addListener(map, 'click', function() {
                 infoWindow.close();
             });
+
             marker.addListener('click',function(){
                 infoWindow.open(map,marker);
             });
@@ -402,7 +407,12 @@
             });
             // Double-cliquez sur un point pour afficher le formulaire de création de lieu
             map.addListener('dblclick', function(event) {
-                ajouterLieu(event.latLng.lat(),event.latLng.lng());
+                if($.trim($("a.connection").html())==="Se Deconnecter"){
+                    ajouterLieu(event.latLng.lat(),event.latLng.lng());
+                } else{
+                    alert("Vous devez être connecté pour créer un lieu")
+                }
+                
             });
             
 
@@ -441,7 +451,6 @@
                 //ajuste la vue de la carte autour de la recherche
                 map.fitBounds(bounds);
             });
-            //ListerLieur();
             //Sous-Fonction AJax/jQuery
             //Elle va chercher la liste des lieux dans l'action 'ListeToiletteAjax'
             //Elle recoit une chaine Json et place un marqueur sur la map
@@ -458,13 +467,19 @@
                 }
             });
         }
-
       
         //Function de démarrage
         $( document ).ready(function() {
             // On ajoute un evenement click sur les boutons de classe annuler
             $(".annuler").click(function(){
                 $("#AjoutLieu").toggle();
+                $("#ListeCommentaire").empty();
+
+            });
+            $("#map").mouseenter(function(){
+                $("#AjoutLieu").hide();
+                $("#AfficherCommentaire").hide();
+                $("#ListeCommentaire").empty();
             });
         });
         // Fonction qui ajoute un lieu à la map
@@ -489,9 +504,7 @@
                 }
             });
         }
-        
-        
-        
+                
         // FOnction Ajax Jquery
         // Lorsque l'utilisateur clique sur le bouton commentaire dans la fenêtre d'un lieu,
         // on affaiche tous les commentaire de ce lieu dans la zon de commentaire qui s'ouvre lors
@@ -505,29 +518,45 @@
                 scrollTop: $("#AfficherCommentaire").offset().top}, 2000);
             // On va chercher tous les commentaire du Lieu qui vien d'être cliquer
             $.getJSON('ListeCommentaire.action?Action=ListeCommentaireAjax&idLieu='+idLieu,function(dataCom,status){
-                var nombreDeLieu = Object.keys(dataCom).length;
-                // On fait une boucle d'affichage qui affiche tous les commentaires
-                for(i=0;i<nombreDeLieu;i++){
-                    var texteCommentaire = dataCom[i].Texte;
-                    // On va chercher le compte du créateur de chaque commentaire pour afficher son nom
-                    $.getJSON('GetCompte.action?Action=GetCompteAjax&idCompte='+dataCom[i].IdCompteCreateur,function(dataCpt,status){
-                            // Chaque commentaire est placé dans un panel qu'on affiche à l'écran
-                            var commentaireHtml =  "<div class='col-sm-4 col-lg-8 col-md-8'>"+
-                                            "<div class='panel panel-primary'>"+
-                                                "<div class='panel-heading'><span class='glyphicon glyphicon-user'></span><span> "+dataCpt.Prenom+" "+dataCpt.Nom+"</span></div>"+
-                                                "<div class='panel-body'>"+		
-                                                    "<p>"+texteCommentaire+"</p>";+
-                                                "</div>"+
-                                            "</div>"+
-                                        "</div>";
-                        // On ajoute le commentaire au DIV LiisteCommentaire
-                        $("#ListeCommentaire").append(commentaireHtml);
-                    });
+                var nombreDeLieu = Object.keys(dataCom).length;         
+                if(nombreDeLieu > 0){
+                    // On fait une boucle d'affichage qui affiche tous les commentaires
+                    for(i=0;i<nombreDeLieu;i++){
+                        var texteCommentaire = dataCom[i].Texte;
+                         NouveauCommentaire(texteCommentaire,dataCom[i].IdCompteCreateur);
+                    }
+                }else{
+                    $("#ListeCommentaire").append("Aucun Commentaire pour ce lieu.");
+                }
+            });
+            $("#boutonCreerCommentaire").click(function() {
+                var IdCompteConnecte = $("#IdCompte").val();
+                var leCommentaire = $.trim($("#TexteCommentaire").val());
+                if (leCommentaire) {
+                    $.getJSON('CommenterUnLieu.action?Action=CommenterUnLieuAjax&IdCompteConnecte='+IdCompteConnecte+'&IdLieu='+idLieu+'&TexteCommentaire='+leCommentaire,function(data,status){});
+                    $("#FormCommentaire")[0].reset();
+                    NouveauCommentaire(leCommentaire,IdCompteConnecte);
+                                    
+
                 }
             });
         }
         
-    
+        function NouveauCommentaire(TexteCommentaire,IdCompte){
+            $.getJSON('GetCompte.action?Action=GetCompteAjax&idCompte='+IdCompte,function(dataCpt,status){
+                // Chaque commentaire est placé dans un panel qu'on affiche à l'écran
+                var commentaireHtml =   "<div class='col-sm-4 col-lg-8 col-md-8'>"+
+                                            "<div class='panel panel-primary'>"+
+                                                "<div class='panel-heading'><span class='glyphicon glyphicon-user'></span><span> "+dataCpt.Prenom+" "+dataCpt.Nom+"</span></div>"+
+                                                "<div class='panel-body'>"+		
+                                                    "<p>"+TexteCommentaire+"</p>";+
+                                                "</div>"+
+                                             "</div>"+
+                                        "</div>";
+                            // On ajoute le commentaire au DIV ListeCommentaire
+               $("#ListeCommentaire").append(commentaireHtml);
+            });  
+        }
         //ajout d'un marqueur avec un click
         
     </script>

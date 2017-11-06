@@ -29,6 +29,8 @@ public class ActionBuilder {
                     return new ListeCommentaireAjaxAction();
                 case "GetCompteAjax":
                     return new GetCompteAjaxAction();
+                case "CommenterUnLieuAjax":
+                    return new CommenterUnLieuAjaxAction();
             }
         return new DefaultAction();
     }
