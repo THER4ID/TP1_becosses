@@ -134,7 +134,7 @@
                 <input type="text" placeholder="ville" name="villecreer"/>
                 <input type="password" placeholder="mot de passe" name="mdpcreer"/>
                 <input type="text" placeholder="adresse courriel" name="courrielcreer"/>
-                <button id="register" disabled="disabled">créer le compte</button>
+                <button id="register">créer le compte</button>
                 <p class="message">déjà un compte? <a href="PageConnexion.Jsp">Se connecter</a></p>
               </form>
             </div>
