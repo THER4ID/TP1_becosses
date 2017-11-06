@@ -242,23 +242,16 @@
     
         </div>     
     </nav>
-
+       <!--
+            Ce DIV contien la map généré pas l'API GOOGLE MAPS JAVASCRIPT
+       -->
        <div id="map"></div>
-        <div class="container-fluid" id="MesLieux">
-            <form id="FormMesLieux">
-                
-                 <label>Description:</label>
-                 <table id="table_lieux">
-                     <tr>
-                         <td>Latitude</td>
-                         <td>Longitude</td>
-                         <td>type de lieux</td>
-                         <td>Disponibilite</td>
-                     </tr>
-                 </table>
-            </form>            
-        </div>
-        
+       
+        <!--
+            Container Boostrap contenant le formulaire d'ajout de lieu.
+            Elle ne s'affiche que lorsque qu'un utilisateur connecté double
+            clique sur la map.
+        -->
         <div class="container-fluid" id="AjoutLieu">
             <form id ="FormAjoutLieu">
                 <h3>Ajout d'une nouvelle Toilette</h3>
@@ -288,10 +281,18 @@
                 <button type="button" class="btn btn-success annuler">Annuler</button> 
             </form>
         </div>
+        <!--
+            Container Boostrap contenant un div listant tous les commentaires de ce lieux et    
+            un formulaire d'ajout de commentaire.
+        -->
             <div class="container-fluid" id="AfficherCommentaire">
                 <h3>Zone Commentaire de la Toilette</h3>
                 <div id='ListeCommentaire'>
                 </div>
+                <!--
+                    On affiche à l'utilisateur le formulaire de commentaire seulement s'il est connecté
+                    au site.
+                 -->
                 <c:choose>
                     <c:when test="${!empty sessionScope.IdConnect}">
                 <div id='Commenter'>
@@ -325,7 +326,7 @@
             
             //modification du type de service de int en string
             if(typeDeService === 0){
-                tds_modif = "fommes";
+                tds_modif = "hommes";
             }
             else if(typeDeService === 1){
                 tds_modif = "femmes";
@@ -342,7 +343,7 @@
             else if(etat === 1){
                 etat_modif = "privée";
             }
-            //contenu de l'infowindow
+            //contenu qui sera afficher dans l'infowindow
             
             var content = '<div id="iw-container">' +
                     '<div class="iw-title">R&eacutesum&eacute Des Toilettes</div>' +
@@ -359,8 +360,8 @@
                       '<b class="tags">ID du cr&eacuteateur: </b>'+idCreateur+'</br>'+
                       '</br>'+
                       '<div  align="center">'+
-                      '</br><button class="boutons" type="button">Sauvegarder</button>'+
-                      '<button class="boutons" onclick=ListerLesCommentaire("+idLieu+") type="button">Commentaire</button>'+
+                      '</br>'+
+                      '<button class="boutons" onclick=ListerLesCommentaire("'+idLieu+'") type="button">Commentaire</button>'+
                       '</p>'+
                       '</div>'+
                     '</div>' +
@@ -369,15 +370,14 @@
             
              
             
-            //On lui ajoute une fenetre de details
+            //On créé le infoWindow en y ajoutant le contenu déclaré plus haut
             var infoWindow = new google.maps.InfoWindow({
                 maxWidth: 350,
                 content: content
               
             });
  
-            // On ajoute des Listener sur le marqueur
-   
+            // On ajoute des Listener d'ouvertur et de fermeture du infowindow
             google.maps.event.addListener(map, 'click', function() {
                 infoWindow.close();
             });
@@ -392,10 +392,12 @@
         
         
         // Fonction qui initialise la map
+        // Cette fonction appelé à l'ouverture du site
+        // On l'appel au même moment de donnée la clé d'utilisation
         function initMap() {
-            $( "#AjoutLieu" ).toggle();
-            $("#AfficherCommentaire").toggle();
+
             //La Carte est placé sur le div 'Map'
+            //On lui donne sa grandeur, son lieu de départ et on lui donne un style
             var map = new google.maps.Map(document.getElementById('map'), {
                 zoom: 11,
                 center: {lat: 45.5017, lng: -73.5673},
@@ -405,12 +407,15 @@
                     mapTypeIds: ['roadmap', 'terrain']
                 }
             });
-            // Double-cliquez sur un point pour afficher le formulaire de création de lieu
+            
+            // On ajoute un listener double-clique sur la map.
+            // Il faut double-cliquez sur un point et être connecté 
+            // pour afficher le formulaire de création de lieu.
             map.addListener('dblclick', function(event) {
                 if($.trim($("a.connection").html())==="Se Deconnecter"){
                     ajouterLieu(event.latLng.lat(),event.latLng.lng());
                 } else{
-                    alert("Vous devez être connecté pour créer un lieu")
+                    alert("Vous devez être connecté pour créer un lieu");
                 }
                 
             });
@@ -451,18 +456,24 @@
                 //ajuste la vue de la carte autour de la recherche
                 map.fitBounds(bounds);
             });
+            
             //Sous-Fonction AJax/jQuery
             //Elle va chercher la liste des lieux dans l'action 'ListeToiletteAjax'
-            //Elle recoit une chaine Json et place un marqueur sur la map
+            //Elle recoit une chaine Json et place les lieu sur la map
             $.getJSON('ListeToilette.action?Action=ListeToiletteAjax',function(data,status){  
+                // On détermine le nombre de lieux
                 var nombreDeLieu = Object.keys(data).length;
                 for(i=0;i<nombreDeLieu;i++){
+                    //On trouve la position
                     var positionToilette = {lng:data[i].Longitude,lat:data[i].Latitude};
+                    //On décide du type d'icone qui sera afficher
+                    // Selon l'état de la toilette 0 = public et 1 = privé
                     var imageEtat =(data[i].Etat === 0?"public":"prive");
                     var icone = {
                         url:"./Multimedia/toilette_"+imageEtat+"_fermee.png",
                         scaledSize: new google.maps.Size(60, 60)
                     };
+                    // On appel la fonction placemarker créé plus haut qui créé et affiche le lieu sur la map
                     placeMarker(positionToilette,map,icone,data[i].Id,data[i].Description,data[i].Etat,data[i].TypeDeService,data[i].CompteId);
                 }
             });
@@ -470,33 +481,47 @@
       
         //Function de démarrage
         $( document ).ready(function() {
+            // On met à hide le formulaire d'ajout de lieu et la section commentaire
+            $( "#AjoutLieu" ).toggle();
+            $("#AfficherCommentaire").toggle();
             // On ajoute un evenement click sur les boutons de classe annuler
             $(".annuler").click(function(){
                 $("#AjoutLieu").toggle();
                 $("#ListeCommentaire").empty();
 
             });
+            // Si le focus de la souris va sur la map, on cache 
+            // le formulaire d'ajout de lieu et la section commentaire.
             $("#map").mouseenter(function(){
                 $("#AjoutLieu").hide();
                 $("#AfficherCommentaire").hide();
                 $("#ListeCommentaire").empty();
             });
         });
+        
         // Fonction qui ajoute un lieu à la map
-        // Elle fonctionne, Je dois finir la vérification des champs
         function ajouterLieu(Latitude,Longitude){
+            // On affiche le formulaire avec une
+            // animation qui nous rend à la section d'ajout de lieu
             $("#AjoutLieu").toggle();
             $('html, body').animate({
                 scrollTop: $("#FormAjoutLieu").offset().top}, 2000);
+            
+            // On met un evenement click sur le bouton de creation de lieu
             $("#boutonCreerLieu").click(function() {
-                alert(Latitude+" "+$("#description").val()+"  "+$("#etat").val()+"   "+$("input[name=radioTypeDeService]:checked").val());
+                // On va chercher les information lié au formulaire
                 var desc =$("#description").val();
                 var etat = $("#etat").val();
                 var tds = $("input[name=radioTypeDeService]:checked").val();
-                if ($.trim(desc) !== "" & tds < 3){                  
+                // Si le formulaire est belle et bien remplis
+                if ($.trim(desc) !== "" & tds < 3){
+                    // FOnction Ajax-Jquery
+                    // On ajoute à la base de donnée une nouvelle toilette
                     $.getJSON('CreerLieu.action?Action=CreerLieuAjax&Description='+desc+'&Etat='+etat+'&TypeDeService='+tds
                             +'&Latitude='+Latitude+'&Longitude='+Longitude+'&CompteId=1',function(data,status){
                     }); 
+                    // On ferme le formulaire 
+                    // On remet à zéro les information du formulaire
                     $("#AjoutLieu").toggle();
                     $("#FormAjoutLieu")[0].reset();
                 }else {
@@ -529,19 +554,25 @@
                     $("#ListeCommentaire").append("Aucun Commentaire pour ce lieu.");
                 }
             });
+            // On ajoute un focntion click sur le bouton de création de commentaire
             $("#boutonCreerCommentaire").click(function() {
                 var IdCompteConnecte = $("#IdCompte").val();
                 var leCommentaire = $.trim($("#TexteCommentaire").val());
                 if (leCommentaire) {
+                    // Fonction Ajax-Jquery
+                    // ON créé la le commentaire dans la base de donnée
                     $.getJSON('CommenterUnLieu.action?Action=CommenterUnLieuAjax&IdCompteConnecte='+IdCompteConnecte+'&IdLieu='+idLieu+'&TexteCommentaire='+leCommentaire,function(data,status){});
                     $("#FormCommentaire")[0].reset();
+                    // On affiche le commentaire
                     NouveauCommentaire(leCommentaire,IdCompteConnecte);
                                     
 
                 }
             });
         }
-        
+        // Function Ajax-Jquery
+        // ON recoit en paramètre les information d'un commentaire
+        // On crée dans la base de donnée un nouveau commentaire avec les bonnes information 
         function NouveauCommentaire(TexteCommentaire,IdCompte){
             $.getJSON('GetCompte.action?Action=GetCompteAjax&idCompte='+IdCompte,function(dataCpt,status){
                 // Chaque commentaire est placé dans un panel qu'on affiche à l'écran
@@ -557,11 +588,13 @@
                $("#ListeCommentaire").append(commentaireHtml);
             });  
         }
-        //ajout d'un marqueur avec un click
         
     </script>
     
-    
+   <!--
+        Script qui initialise avec l'API google maps la map sur notre site avec l'aide de la clé.
+        C'est à la fin qu'on appel la fonction InitMap
+   -->
     <script async defer
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD3gKwa-w0U3DzR9pp02SOhPQaYN4KWCqY&libraries=places&callback=initMap">
     </script>

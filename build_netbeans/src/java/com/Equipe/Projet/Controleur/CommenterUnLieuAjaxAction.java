@@ -17,6 +17,9 @@ import javax.servlet.http.HttpServletResponse;
 /**
  *
  * @author Le Paré
+ * 
+ * Cette Action est de type Ajax.
+ * Elle est appeler lorsqu'un utilisateur commente un lieu.
  */
 public class CommenterUnLieuAjaxAction implements AjaxAction, RequestAware, Action {
     private HttpServletRequest Request;
