@@ -99,6 +99,94 @@
             {
                 border: 2px solid black; /* auront une bordure de 1px */
             }
+            /* pour la infowindow */
+            .iw-content img {
+                float: right;
+                margin: 0 5px 5px 10px;
+                
+            }
+
+            .iw-title{
+                text-align: center;
+                background-color: lightblue;
+                font-size: 20px;
+            }
+            .iw-subTitle{
+                font-weight: bold;
+                
+            }
+            .tags{
+                font-weight: bold;
+                
+            }
+            .service{
+                font-weight: bold;
+                color:red;
+            }
+            .boutons{
+                border-radius: 4px;
+            #map-canvas {
+                margin: 0;
+                padding: 0;
+                height: 400px;
+                max-width: none;
+            }
+            #map-canvas img {
+                max-width: none !important;
+            }
+            .gm-style-iw {
+                width: 350px !important;
+                top: 15px !important;
+                left: 0px !important;
+                background-color: #fff;
+                box-shadow: 0 1px 6px rgba(178, 178, 178, 0.6);
+                border: 1px solid rgba(72, 181, 233, 0.6);
+                border-radius: 10px 10px 10px 10px;;
+            }
+            #iw-container {
+                margin-bottom: 10px;
+            }
+            #iw-container .iw-title {
+                font-family: 'Open Sans Condensed', sans-serif;
+                font-size: 22px;
+                font-weight: 400;
+                padding: 10px;
+                background-color: #48b5e9;
+                color: white;
+                margin: 0;
+                border-radius: 500px;
+            }
+            #iw-container .iw-content {
+                font-size: 13px;
+                line-height: 18px;
+                font-weight: 400;
+                margin-right: 1px;
+                padding: 15px 5px 20px 15px;
+                max-height: 140px;
+                overflow-y: auto;
+                overflow-x: hidden;
+            }
+            .iw-content img {
+                float: right;
+                margin: 0 5px 5px 10px;	
+            }
+            .iw-subTitle {
+                font-size: 16px;
+                font-weight: 700;
+                padding: 5px 0;
+            }
+            .iw-bottom-gradient {
+                position: absolute;
+                width: 326px;
+                height: 25px;
+                bottom: 10px;
+                right: 18px;
+                background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%);
+                background: -webkit-linear-gradient(top, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%);
+                background: -moz-linear-gradient(top, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%);
+                background: -ms-linear-gradient(top, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%);
+            }
+
 
         </style>
     </head>
@@ -154,9 +242,11 @@
     
         </div>     
     </nav>
+
        <div id="map"></div>
         <div class="container-fluid" id="MesLieux">
             <form id="FormMesLieux">
+                
                  <label>Description:</label>
                  <table id="table_lieux">
                      <tr>
@@ -225,7 +315,8 @@
                 position: location,
                 map: map,
                 animation: google.maps.Animation.DROP,  
-                icon: icone
+                icon: icone,
+                title:"Porcelain Factory of Vista Alegre"
             });
             
             //variable modif
@@ -234,36 +325,72 @@
             
             //modification du type de service de int en string
             if(typeDeService === 0){
-                tds_modif = "Hommes";
+                tds_modif = "fommes";
             }
             else if(typeDeService === 1){
-                tds_modif = "Femmes";
+                tds_modif = "femmes";
             }
             else if(typeDeService === 2){
-                tds_modif = "Hommes et Femmes";
+                tds_modif = "hommes et femmes";
             }
             
             //modification de l'etat de int en string
             if(etat === 0){
-                etat_modif = "Public";
+                etat_modif = "publique";
             }
             
             else if(etat === 1){
-                etat_modif = "Privé";
+                etat_modif = "privée";
             }
-
+            //contenu de l'infowindow
+            
+            var content = '<div id="iw-container">' +
+                    '<div class="iw-title">R&eacutesum&eacute Des Toilettes</div>' +
+                    '<div class="iw-content">' +
+                      '<div class="iw-subTitle">Informations</div>' +
+                      '<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/JapaneseToiletBidet.jpg/180px-JapaneseToiletBidet.jpg" alt="Porcelain Factory of Vista Alegre" height="115" width="83">' +
+      
+                      '<p>'+desc+'</br>'+
+                      '</br>'+
+                      '<b class="service">Cette toilette '+etat_modif+' est disponible pour les '+tds_modif+'</b></br>'+
+                      '</p>'+
+                      '<div class="iw-subTitle">Informations Suppl&eacutementaires</div>' +
+                      '<p><b class="tags">ID du Lieu :</b>'+idLieu +'<br>'+
+                      '<b class="tags">ID du cr&eacuteateur: </b>'+idCreateur+'</br>'+
+                      '</br>'+
+                      '<div  align="center">'+
+                      '</br><button class="boutons" type="button">Sauvegarder</button>'+
+                      '<button class="boutons" onclick=ListerLesCommentaire("+idLieu+") type="button">Commentaire</button>'+
+                      '</p>'+
+                      '</div>'+
+                    '</div>' +
+                    '<div class="iw-bottom-gradient"></div>' +
+                  '</div>';
+            
+             
             
             //On lui ajoute une fenetre de details
             var infoWindow = new google.maps.InfoWindow({
-                maxWidth: 520,
-                content: "<div id='bodyInfo'> </br> id du lieu:"+idLieu+"</br> description: "+desc+"</br> Etat: "+etat_modif+"</br>\n\
-                Type de service: "+tds_modif+"</br> Id compte Créateur:"+idCreateur+"</br><button type='button'>Sauvegarder</button><button onclick=ListerLesCommentaire("+idLieu+") type='button'>Commentaire</button><div>" 
+                maxWidth: 350,
+                content: content
+              
             });
+ 
             // On ajoute des Listener sur le marqueur
+   
+            google.maps.event.addListener(map, 'click', function() {
+                infoWindow.close();
+            });
+
             marker.addListener('click',function(){
                 infoWindow.open(map,marker);
             });
+
+            
+          
         }
+        
+        
         // Fonction qui initialise la map
         function initMap() {
             $( "#AjoutLieu" ).toggle();
@@ -288,6 +415,7 @@
                 
             });
             
+
             //Ajout d'une barre de recherche
             var input = document.getElementById('pac-input');
             var searchBox = new google.maps.places.SearchBox(input);
